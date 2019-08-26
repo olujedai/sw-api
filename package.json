@@ -1,8 +1,8 @@
 {
   "name": "sw-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "An api for retrieving star wars movies, comments and character information",
+  "author": "Moyosore Abudu <moyo.abudu@gmail.com>",
   "license": "MIT",
   "scripts": {
     "build": "rimraf dist && tsc -p tsconfig.build.json",
