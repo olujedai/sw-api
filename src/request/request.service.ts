@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-// import rp from 'request-promise-native';
 import rp = require('request-promise-native');
 
 @Injectable()
