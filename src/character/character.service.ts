@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { RequestService } from '../request/request.service';
 import { CharactersDto } from './characters.dto';
+import { CharacterDto } from './character.dto';
 
 @Injectable()
 export class CharacterService {
     constructor(private readonly requestService: RequestService) {}
+
     async getCharacters(characters: string[]): Promise<CharactersDto> {
         let characterList = [];
         characters.map(characterUrl => {
@@ -12,23 +14,39 @@ export class CharacterService {
         });
         characterList = await Promise.all(characterList);
         const allCharacters = characterList.map(character => this.retrieveFields(character));
-        const totalCharacters = characterList.length;
+        const totalNumberOfCharacters = characterList.length;
+        const totalHeightInCm = this.calculateHeightInCm(characterList);
+        const movieCharacters = this.prepareResponse(allCharacters, totalNumberOfCharacters, totalHeightInCm);
+        return movieCharacters;
+    }
+
+    calculateHeightInCm(characterList: CharacterDto[]): number {
         const numOr0 = n => isNaN(n) ? 0 : Number(n);
         let totalHeightInCm = 0;
         characterList.forEach(character =>
             totalHeightInCm += numOr0(character.height),
         );
+        return totalHeightInCm;
+    }
+
+    convertCmToFeet(heightInCm) {
+        const realFeet = ((heightInCm * 0.393700) / 12);
+        const feet = Math.floor(realFeet);
+        const inches = Math.round((realFeet - feet) * 12);
+        return `${feet}ft. ${inches}in.`;
+    }
+
+    prepareResponse(allCharacters: CharacterDto[], totalNumberOfCharacters: number, totalHeightInCm: number): CharactersDto {
         let movieCharacters;
         movieCharacters = {};
         movieCharacters.metadata = {
-            total: totalCharacters,
+            total: totalNumberOfCharacters,
             totalHeight: {
                 cm: `${totalHeightInCm} cm`,
                 feet: this.convertCmToFeet(totalHeightInCm),
             },
         };
         movieCharacters.characters = allCharacters;
-
         return movieCharacters;
     }
 
@@ -38,12 +56,5 @@ export class CharacterService {
             gender: character.gender,
             height: character.height,
         };
-    }
-
-    convertCmToFeet(heightInCm) {
-        const realFeet = ((heightInCm * 0.393700) / 12);
-        const feet = Math.floor(realFeet);
-        const inches = Math.round((realFeet - feet) * 12);
-        return `${feet}ft. ${inches}in.`;
     }
 }
