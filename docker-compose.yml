@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+  sw-db:
+    image: "postgres"
+    restart: always
+    environment:
+     - POSTGRES_USER=postgres
+     - POSTGRES_PASSWORD=postgres
+     - POSTGRES_DB=sw-db
+     - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - data:/var/lib/postgresql/data
+    networks:
+      - force
+
+  sw-api:
+    container_name: sw-api
+    image: sw-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - sw-db
+    ports:
+      - "3000:3000"
+    env_file:
+      - .dockerenv
+    networks:
+      - force
+
+volumes:
+  data:
+    external: false
+
+networks:
+  force:
+    driver: bridge
