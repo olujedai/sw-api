@@ -24,7 +24,7 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
-    origin: '*, https://moyosore-sw-api.herokuapp.com',
+    origin: '* https://moyosore-sw-api.herokuapp.com',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 200,
