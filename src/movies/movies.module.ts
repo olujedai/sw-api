@@ -7,5 +7,6 @@ import { RequestModule } from '../request/request.module';
   controllers: [MoviesController],
   providers: [MoviesService],
   imports: [RequestModule],
+  exports: [MoviesService],
 })
 export class MoviesModule {}

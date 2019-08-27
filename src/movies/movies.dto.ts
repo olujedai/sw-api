@@ -3,5 +3,6 @@ export class MovieDto {
     readonly name: string;
     readonly releaseDate: Date;
     readonly openingCrawl: string;
+    readonly characters: string[];
     readonly commentCount: number;
 }
