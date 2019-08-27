@@ -33,7 +33,7 @@ async function bootstrap() {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if (req.method === 'OPTION') {
-        res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
+        res.header('Access-Control-Allow-Methods', 'GET,OPTION,POST,PUT,DELETE,PATCH');
         return res.status(200).json({});
     }
     next();
