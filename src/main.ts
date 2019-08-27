@@ -24,18 +24,21 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({
-    origin: '* https://moyosore-sw-api.herokuapp.com',
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: false,
+    preflightContinue: true,
     optionsSuccessStatus: 200,
   });
   app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     if (req.method === 'OPTION') {
-        res.header('Access-Control-Allow-Methods', 'GET,OPTION,POST,PUT,DELETE,PATCH');
-        return res.status(200).json({});
+      res.header('Access-Control-Allow-Methods', 'GET,OPTION,POST,PUT,DELETE,PATCH');
+      return res.status(200).json({});
     }
+    // if (req.method === 'POST') {
+    //   next();
+    // }
     next();
   });
   app.use(session({secret: Math.random().toString(36).substring(7)}));
