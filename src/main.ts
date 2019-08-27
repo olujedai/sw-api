@@ -29,15 +29,15 @@ async function bootstrap() {
     preflightContinue: false,
     optionsSuccessStatus: 200,
   });
-  // app.use((req,res,next)=>{
-  //   res.header("Access-Control-Allow-Origin", "*");
-  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  //   if(req.method ==='OPTION'){
-  //       res.header("Access-Control-Allow-Methods", 'GET,POST,PUT,DELETE,PATCH');
-  //       return res.status(200).json({});
-  //   }
-  //   next();
-  // });
+  app.use((req, res, next)=>{
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    if (req.method === 'OPTION') {
+        res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
+        return res.status(200).json({});
+    }
+    next();
+  });
   app.use(session({secret: Math.random().toString(36).substring(7)}));
   app.use(csurf());
   await app.listen(Number(process.env.PORT || 3000));
