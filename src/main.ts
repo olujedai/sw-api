@@ -39,7 +39,9 @@ async function bootstrap() {
     next();
   });
   app.use(session({secret: Math.random().toString(36).substring(7)}));
-  app.use(csurf());
+  app.use(csurf({
+    ignoreMethods: ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
+  }));
   await app.listen(Number(process.env.PORT || 3000));
 }
 bootstrap();
