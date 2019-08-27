@@ -29,12 +29,9 @@ async function bootstrap() {
   //   preflightContinue: true,
   //   optionsSuccessStatus: 200,
   // });
-  app.enableCors();
   // app.use(session({secret: Math.random().toString(36).substring(7)}));
-  app.use(csurf({
-    cookie: true,
-    ignoreMethods: ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
-  }));
+  app.use(csurf());
+  app.enableCors();
   await app.listen(Number(process.env.PORT || 3000));
 }
 bootstrap();
