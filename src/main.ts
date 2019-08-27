@@ -26,7 +26,7 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.use(session({secret: Math.random().toString(36).substring(7)}));
-  app.use(csurf());
+  // app.use(csurf());
   await app.listen(Number(process.env.PORT || 3000));
 }
 bootstrap();
