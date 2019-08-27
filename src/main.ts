@@ -30,7 +30,10 @@ async function bootstrap() {
   //   optionsSuccessStatus: 200,
   // });
   // app.use(session({secret: Math.random().toString(36).substring(7)}));
-  app.use(csurf());
+  app.use(csurf({
+    cookie: true,
+    // ignoreMethods: ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
+  }));
   app.enableCors();
   await app.listen(Number(process.env.PORT || 3000));
 }
