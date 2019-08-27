@@ -14,4 +14,13 @@ export class RequestService {
         };
         return rp(options);
     }
+    async fetchUrl(url) {
+        const options = {
+            uri: url,
+            method: 'GET',
+            simple: true,
+            json: true,
+        };
+        return rp(options);
+    }
 }
