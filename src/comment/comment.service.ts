@@ -10,7 +10,7 @@ export class CommentService {
         private readonly commentRepository: Repository<Comment>,
       ) {}
 
-    findAll(skip, size, filter): Promise<[Comment[], number]> {
+      findAll(skip, size, filter): Promise<[Comment[], number]> {
         return this.commentRepository.findAndCount({
             where: filter,
             order: {
@@ -18,6 +18,12 @@ export class CommentService {
             },
             skip: Number(skip),
             take: Number(size || 20),
+        });
+    }
+
+    count(filter): Promise<number> {
+        return this.commentRepository.count({
+            where: filter,
         });
     }
 

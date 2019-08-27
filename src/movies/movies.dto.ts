@@ -4,5 +4,5 @@ export class MovieDto {
     readonly releaseDate: Date;
     readonly openingCrawl: string;
     readonly characters: string[];
-    readonly commentCount: number;
+    commentCount: number;
 }

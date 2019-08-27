@@ -9,5 +9,6 @@ import { UtilsModule } from '../utils/utils.module';
   imports: [TypeOrmModule.forFeature([Comment]), UtilsModule],
   providers: [CommentService],
   controllers: [CommentController],
+  exports: [CommentService],
 })
 export class CommentModule {}
