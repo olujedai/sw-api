@@ -39,4 +39,8 @@ export class UtilsService {
     isANumber = (a) => {
         return !Number.isNaN(Number(a));
     }
+
+    getIpAddress = (request) => {
+        return (request.headers['x-forwarded-for'] || '').split(',').pop() || request.connection.remoteAddress;
+    }
 }
