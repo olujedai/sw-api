@@ -12,9 +12,11 @@ export class CharacterController {
     ) {}
 
     @Get(':movieId')
-    async getCharacters(@Param() params, @Query('order') order: string ): Promise<CharactersDto> {
-        const movie: MovieDto = await this.moviesService.getMovie(params.movieId);
+    async getCharacters(@Param() params, @Query() query ): Promise<CharactersDto> {
+        const {name, gender, height, order, sort, filter} = query;
+        const movieId = params.movieId;
+        const movie: MovieDto = await this.moviesService.getMovie(movieId);
         const characters = movie.characters;
-        return await this.characterService.getCharacters(characters);
+        return await this.characterService.getCharacters(characters, name, gender, height, order, sort, filter);
     }
 }

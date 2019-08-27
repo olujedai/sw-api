@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { MovieDto } from './movies.dto';
 import { RequestService } from '../request/request.service';
-import { sortFunction } from './movies.utils';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
 export class MoviesService {
-    constructor(private readonly requestService: RequestService) {}
+    constructor(
+        private readonly requestService: RequestService,
+        private readonly utilsService: UtilsService,
+    ) {}
     async getMovies(): Promise<MovieDto[]> {
         const path: string = 'films';
         const resp: any = await this.requestService.fetch(path);
         const movieList: MovieDto[] = resp.results.map(movie => this.retrieveFields(movie));
-        movieList.sort(sortFunction('releaseDate'));
+        movieList.sort(this.utilsService.sortFunction('releaseDate'));
 
         return movieList;
     }

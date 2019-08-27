@@ -1,23 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { RequestService } from '../request/request.service';
-import { CharactersDto } from './characters.dto';
 import { CharacterDto } from './character.dto';
+import { CharactersDto } from './characters.dto';
+import { UtilsService } from '../utils/utils.service';
 
 @Injectable()
 export class CharacterService {
-    constructor(private readonly requestService: RequestService) {}
+    constructor(
+        private readonly requestService: RequestService,
+        private readonly utilsService: UtilsService,
+    ) {}
 
-    async getCharacters(characters: string[]): Promise<CharactersDto> {
+    async getCharacters(characters: string[], name, gender, height, order, sort, filter): Promise<CharactersDto> {
         let characterList = [];
         characters.map(characterUrl => {
             characterList.push(this.requestService.fetchUrl(characterUrl));
         });
         characterList = await Promise.all(characterList);
-        const allCharacters = characterList.map(character => this.retrieveFields(character));
-        const totalNumberOfCharacters = characterList.length;
-        const totalHeightInCm = this.calculateHeightInCm(characterList);
+        let allCharacters = characterList.map(character => this.retrieveFields(character));
+        if (filter === 'true') {
+            allCharacters = allCharacters.filter(character => this.filterByGender(character, gender));
+        }
+        if (sort === 'true') {
+            allCharacters = name ? allCharacters.sort(this.utilsService.sortFunction('name', order)) : allCharacters;
+            allCharacters = gender ? allCharacters.sort(this.utilsService.sortFunction('gender', order)) : allCharacters;
+            allCharacters = height ? allCharacters.sort(this.utilsService.sortFunction('height', order)) : allCharacters;
+        }
+        const totalNumberOfCharacters = allCharacters.length;
+        const totalHeightInCm = this.calculateHeightInCm(allCharacters);
         const movieCharacters = this.prepareResponse(allCharacters, totalNumberOfCharacters, totalHeightInCm);
         return movieCharacters;
+    }
+
+    filterByGender(character: CharacterDto, gender: string) {
+        return character.gender === this.getGender(gender);
+    }
+
+    getGender(gender) {
+        if (gender.toLowerCase() === 'male') {
+            return 'male';
+        }
+        if (gender.toLowerCase() === 'female') {
+            return 'female';
+        }
+
+        if (gender.toLowerCase() === 'hermaphrodite') {
+            return 'hermaphrodite';
+        }
+
+        if (gender.toLowerCase() === 'n/a') {
+            return 'n/a';
+        }
+
+        if (gender.toLowerCase() === 'none') {
+            return 'none';
+        }
+        return null;
     }
 
     calculateHeightInCm(characterList: CharacterDto[]): number {
@@ -33,6 +71,11 @@ export class CharacterService {
         const realFeet = ((heightInCm * 0.393700) / 12);
         const feet = Math.floor(realFeet);
         const inches = Math.round((realFeet - feet) * 12);
+        return {feet, inches};
+    }
+
+    formatFeet(heightInFeet) {
+        const {feet, inches} = heightInFeet;
         return `${feet}ft. ${inches}in.`;
     }
 
@@ -42,8 +85,8 @@ export class CharacterService {
         movieCharacters.metadata = {
             total: totalNumberOfCharacters,
             totalHeight: {
-                cm: `${totalHeightInCm} cm`,
-                feet: this.convertCmToFeet(totalHeightInCm),
+                cm: `${totalHeightInCm}cm`,
+                feet: this.formatFeet(this.convertCmToFeet(totalHeightInCm)),
             },
         };
         movieCharacters.characters = allCharacters;
@@ -53,8 +96,8 @@ export class CharacterService {
     retrieveFields(character) {
         return {
             name: character.name,
-            gender: character.gender,
-            height: character.height,
+            gender: this.getGender(character.gender),
+            height: this.utilsService.isANumber(character.height) ? Number(character.height) : character.height,
         };
     }
 }
