@@ -10,8 +10,8 @@ export class CommentService {
         private readonly commentRepository: Repository<Comment>,
       ) {}
 
-      findAll(skip, size, filter): Promise<[Comment[], number]> {
-        return this.commentRepository.findAndCount({
+      async findAll(skip, size, filter): Promise<[Comment[], number]> {
+        return await this.commentRepository.findAndCount({
             where: filter,
             order: {
                 dateCreated: 'DESC',

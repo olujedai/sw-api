@@ -3,6 +3,7 @@ import { CommentService } from './comment.service';
 import { UtilsService } from '../utils/utils.service';
 import { Request } from 'express';
 import { CommentDto } from './comment.dto';
+import { CommentParamDto } from './comment.param.dto';
 
 @Controller('comment')
 export class CommentController {
@@ -13,7 +14,7 @@ export class CommentController {
 
     @Post(':movieId')
     @Header('Content-Type', 'application/json')
-    async saveComment(@Param() param, @Req() request: Request, @Body() body: CommentDto) {
+    async saveComment(@Param() param: CommentParamDto, @Req() request: Request, @Body() body: CommentDto) {
         const movieId = param.movieId;
         const ipAddress = this.utilsService.getIpAddress(request);
         const {comment, commenter} = body;
@@ -21,12 +22,19 @@ export class CommentController {
     }
 
     @Get(':movieId')
-    async findAllMovieComments(@Param() param, @Query() query) {
+    async findAllMovieComments(@Param() param: CommentParamDto, @Query() query) {
         const movieId = param.movieId;
         const { skip, size } = query;
         const filter = {
             movieId,
         };
-        return await this.commentService.findAll(skip, size, filter);
+        const response = await this.commentService.findAll(skip, size, filter);
+        const comments = response[0];
+        const count = response[1];
+        return {
+            comments,
+            count,
+        };
+
     }
 }
