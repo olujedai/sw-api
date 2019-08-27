@@ -7,4 +7,4 @@ RUN npm install
 COPY . ./
 EXPOSE 3000
 
-CMD ["pm2-runtime", "main.js", "--name", "app"]
+CMD ["pm2-runtime", "dist/main.js", "--name", "app"]
