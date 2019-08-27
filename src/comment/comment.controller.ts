@@ -4,6 +4,7 @@ import { UtilsService } from '../utils/utils.service';
 import { Request } from 'express';
 import { CommentDto } from './comment.dto';
 import { CommentParamDto } from './comment.param.dto';
+import { Comment } from './comment.entity';
 
 @Controller('comment')
 export class CommentController {
@@ -14,7 +15,7 @@ export class CommentController {
 
     @Post(':movieId')
     @Header('Content-Type', 'application/json')
-    async saveComment(@Param() param: CommentParamDto, @Req() request: Request, @Body() body: CommentDto) {
+    async saveComment(@Param() param: CommentParamDto, @Req() request: Request, @Body() body: CommentDto): Promise<Comment> {
         const movieId = param.movieId;
         const ipAddress = this.utilsService.getIpAddress(request);
         const {comment, commenter} = body;
@@ -35,6 +36,5 @@ export class CommentController {
             comments,
             count,
         };
-
     }
 }
