@@ -17,7 +17,13 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
   app.use(helmet());
   app.use(csurf());
-  app.enableCors();
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: false,
+    optionsSuccessStatus: 200,
+  },
+  );
   await app.listen(Number(process.env.PORT || 3000));
 }
 bootstrap();
