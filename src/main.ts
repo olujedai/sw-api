@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as helmet from 'helmet';
 import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
+import * as session from 'express-session';
 
 process.env.TZ = 'UTC';
 
@@ -24,6 +25,7 @@ async function bootstrap() {
   });
   app.use(helmet());
   app.use(cookieParser());
+  app.use(session({cookie: Math.random().toString(36).substring(7)}));
   app.use(csurf());
   await app.listen(Number(process.env.PORT || 3000));
 }
