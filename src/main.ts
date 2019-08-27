@@ -19,16 +19,25 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('/', app, document);
+  app.use(expressRequest());
+  app.use(bodyParser());
+  app.use(helmet());
+  app.use(cookieParser());
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     optionsSuccessStatus: 200,
   });
-  app.use(expressRequest());
-  app.use(bodyParser());
-  app.use(helmet());
-  app.use(cookieParser());
+  // app.use((req,res,next)=>{
+  //   res.header("Access-Control-Allow-Origin", "*");
+  //   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  //   if(req.method ==='OPTION'){
+  //       res.header("Access-Control-Allow-Methods", 'GET,POST,PUT,DELETE,PATCH');
+  //       return res.status(200).json({});
+  //   }
+  //   next();
+  // });
   app.use(session({secret: Math.random().toString(36).substring(7)}));
   app.use(csurf());
   await app.listen(Number(process.env.PORT || 3000));
