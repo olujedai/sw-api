@@ -2,7 +2,7 @@
 
 ## Description
 
-App for communicating with the Star Wars API. Try it at
+App for communicating with the Star Wars API. Try it out [here](https://moyosore-sw-api.herokuapp.com/)
 
 
 ## Getting Started
