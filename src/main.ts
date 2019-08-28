@@ -20,7 +20,13 @@ async function bootstrap() {
     cookie: true,
     // ignoreMethods: ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
   }));
-  app.enableCors();
+  // app.enableCors();
+  app.enableCors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    preflightContinue: true,
+    optionsSuccessStatus: 200,
+  });
   const options = new DocumentBuilder()
     .setTitle('Star Wars Api')
     .setDescription('App for communicating with the Star Wars API')

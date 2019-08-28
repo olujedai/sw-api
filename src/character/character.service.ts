@@ -17,7 +17,12 @@ export class CharacterService {
             characterList.push(this.requestService.fetchUrl(characterUrl));
         });
         characterList = await Promise.all(characterList);
-        let allCharacters = characterList.map(character => this.retrieveFields(character));
+        const allCharacters = characterList.map(character => this.retrieveFields(character));
+        const movieCharacters = this.processCharacters(allCharacters, name, gender, height, order, sort, filter);
+        return movieCharacters;
+    }
+
+    processCharacters(allCharacters, name, gender, height, order, sort, filter) {
         if (filter === 'true') {
             allCharacters = allCharacters.filter(character => this.filterByGender(character, gender));
         }
@@ -31,7 +36,6 @@ export class CharacterService {
         const movieCharacters = this.prepareResponse(allCharacters, totalNumberOfCharacters, totalHeightInCm);
         return movieCharacters;
     }
-
     filterByGender(character: CharacterDto, gender: string) {
         return character.gender === this.getGender(gender);
     }
