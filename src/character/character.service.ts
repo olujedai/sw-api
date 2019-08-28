@@ -27,9 +27,7 @@ export class CharacterService {
             allCharacters = allCharacters.filter(character => this.filterByGender(character, gender));
         }
         if (sort === 'true') {
-            allCharacters = name ? allCharacters.sort(this.utilsService.sortFunction('name', order)) : allCharacters;
-            allCharacters = gender ? allCharacters.sort(this.utilsService.sortFunction('gender', order)) : allCharacters;
-            allCharacters = height ? allCharacters.sort(this.utilsService.sortFunction('height', order)) : allCharacters;
+            allCharacters = this.sort(allCharacters, name, gender, height, order);
         }
         const totalNumberOfCharacters = allCharacters.length;
         const totalHeightInCm = this.calculateHeightInCm(allCharacters);
@@ -40,6 +38,18 @@ export class CharacterService {
         return character.gender === this.getGender(gender);
     }
 
+    sort(allCharacters, name, gender, height, order) {
+        if (name === 'true') {
+            return allCharacters.sort(this.utilsService.sortFunction('name', order));
+        }
+        if (gender === 'true') {
+            return allCharacters.sort(this.utilsService.sortFunction('gender', order));
+        }
+        if (height === 'true') {
+            return allCharacters.sort(this.utilsService.sortFunction('height', order));
+        }
+        return allCharacters;
+    }
     getGender(gender) {
         if (gender.toLowerCase() === 'male') {
             return 'male';

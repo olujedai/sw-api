@@ -55,6 +55,10 @@ $ yarn test:e2e
 $ yarn test:cov
 ```
 
+## Todo
+1. Increase test coverage.
+2. Fix error when making post requests through swagger.
+
 ## License
 
 This app is [MIT licensed](LICENSE).
