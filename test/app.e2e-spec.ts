@@ -16,7 +16,7 @@ describe('AppController (e2e)', () => {
 
   it('/ (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
+      .get('/is-alive')
       .expect(200)
       .expect('This server is up');
   });

@@ -58,6 +58,7 @@ $ yarn test:cov
 ## Todo
 1. Increase test coverage.
 2. Fix error when making post requests through swagger.
+3. Cache remote requests into redis.
 
 ## License
 
