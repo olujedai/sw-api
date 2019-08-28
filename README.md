@@ -55,6 +55,12 @@ $ yarn test:e2e
 $ yarn test:cov
 ```
 
+## Technology Stack
+* **Language**: [Javascript](https://www.typescriptlang.org/)
+* **Web Framework**: [NestJS](https://docs.nestjs.com)
+* **Database**: [PostgreSQL](https://www.postgresql.org/)
+
+
 ## Todo
 - [ ] Increase test coverage.
 - [ ] Fix error when making post requests through swagger.
