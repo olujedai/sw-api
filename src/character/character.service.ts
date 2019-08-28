@@ -12,14 +12,34 @@ export class CharacterService {
     ) {}
 
     async getCharacters(characters: string[], name, gender, height, order, sort, filter): Promise<CharactersDto> {
+        const characterPromisesList = [];
         let characterList = [];
         characters.map(characterUrl => {
-            characterList.push(this.requestService.fetchUrl(characterUrl));
+            const character = this.getCharacter(characterUrl);
+            this.isObject(character) ? characterList.push(character) : characterPromisesList.push(character);
         });
-        characterList = await Promise.all(characterList);
+        const resolvedPromisesList = await Promise.all(characterPromisesList);
+        resolvedPromisesList.forEach((character) => {
+            const characterUrl = character.url;
+            this.requestService.storeInRedis(characterUrl, JSON.stringify(character));
+        });
+        characterList = characterList.concat(resolvedPromisesList);
         const allCharacters = characterList.map(character => this.retrieveFields(character));
         const movieCharacters = this.processCharacters(allCharacters, name, gender, height, order, sort, filter);
         return movieCharacters;
+    }
+
+    async getCharacter(characterUrl) {
+        let character = await this.requestService.getFromRedis(characterUrl);
+        if (character) {
+            return JSON.parse(character);
+        }
+        character = this.requestService.fetchUrl(characterUrl);
+        return character;
+    }
+
+    isObject(obj) {
+        return obj !== undefined && obj !== null && obj.constructor === Object;
     }
 
     processCharacters(allCharacters, name, gender, height, order, sort, filter) {
