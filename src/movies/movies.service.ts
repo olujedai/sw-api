@@ -16,7 +16,12 @@ export class MoviesService {
     async getMovies(): Promise<MovieDto[]> {
         const path: string = 'films';
         const resp: any = await this.requestService.fetch(path);
-        const movieList: MovieDto[] = resp.results.map(movie => this.retrieveFields(movie));
+        const movieList = this.processMovies(resp.results);
+        return movieList;
+    }
+
+    async processMovies(responseList) {
+        const movieList: MovieDto[] = responseList.map(movie => this.retrieveFields(movie));
         const movieIds = movieList.map(movie => movie.id);
         const movieComments = movieIds.map(movieId => this.getCommentCount(movieId));
         const resolvedComments = await Promise.all(movieComments);
@@ -24,7 +29,6 @@ export class MoviesService {
             movie.commentCount = resolvedComments[index];
         });
         movieList.sort(this.utilsService.sortFunction('releaseDate'));
-
         return movieList;
     }
 
