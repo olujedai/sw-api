@@ -19,12 +19,14 @@ App for communicating with the Star Wars API. Try it out [here](https://moyosore
 
 5. Set up the environment variables by running ```cp env.sample .env``` and modify the defaults.
 
-6. Build and run the backend services using ```yarn start:docker```.
+6. Set up the docker environment variables by running ```cp env.sample .dockerenv``` and modify the defaults.
+
+7. Build and run the backend services using ```yarn start:docker```.
 It will take a fair bit of time the first time you do it, subsequently it will be much faster. If you get any errors, please get in touch.  
 
-7. Launch the containers using ```docker-compose up``` .
+8. Launch the containers using ```docker-compose up``` .
 
-8. Navigate to  ```http://localhost:3000``` on your computer to view the openapi documentation.
+9. Navigate to  ```http://localhost:3000``` on your computer to view the openapi documentation.
 
 ## Running the app
 
