@@ -14,7 +14,8 @@ export class CharacterQueryDto {
     @ApiModelProperty(
         {
             description: 'Sort response by character gender. \
-            The sort option must be true for this to work.',
+            The sort option must be true for this to work.\
+            When filter is true, a gender must be selected',
             required: false,
             type: 'string',
             example: 'gender=female',
@@ -28,7 +29,7 @@ export class CharacterQueryDto {
             description: 'Sort response by character height. \
             The sort option must be true for this to work.',
             required: false,
-            type: 'string',
+            type: 'boolean',
             example: 'height=true',
         },
     )
@@ -41,6 +42,7 @@ export class CharacterQueryDto {
             required: false,
             type: 'string',
             example: 'order=asc',
+            enum: ['asc', 'desc'],
         },
     )
     order: string;

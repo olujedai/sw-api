@@ -5,7 +5,9 @@ import { MovieDto } from '../movies/movies.dto';
 import { CharactersDto } from './characters.dto';
 import { CharacterParamDto } from './character.param.dto';
 import { CharacterQueryDto } from './character.query.dto';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('sw-api')
 @Controller('character')
 export class CharacterController {
     constructor(

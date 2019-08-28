@@ -5,7 +5,9 @@ import { Request } from 'express';
 import { CommentDto } from './comment.dto';
 import { CommentParamDto } from './comment.param.dto';
 import { Comment } from './comment.entity';
+import { ApiUseTags } from '@nestjs/swagger';
 
+@ApiUseTags('sw-api')
 @Controller('comment')
 export class CommentController {
     constructor(
