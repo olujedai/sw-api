@@ -3,7 +3,6 @@ import { MovieDto } from './movies.dto';
 import { RequestService } from '../request/request.service';
 import { UtilsService } from '../utils/utils.service';
 import { CommentService } from '../comment/comment.service';
-import { Comment } from '../comment/comment.entity';
 
 @Injectable()
 export class MoviesService {
@@ -16,12 +15,13 @@ export class MoviesService {
     async getMovies(): Promise<MovieDto[]> {
         const path: string = 'films';
         const resp: any = await this.requestService.fetch(path);
-        const movieList = this.processMovies(resp.results);
-        return movieList;
+        // return resp.results;
+        const movieList: MovieDto[] = resp.results.map(movie => this.retrieveFields(movie));
+        const movies = this.processMovies(movieList);
+        return movies;
     }
 
-    async processMovies(responseList) {
-        const movieList: MovieDto[] = responseList.map(movie => this.retrieveFields(movie));
+    async processMovies(movieList: MovieDto[]): Promise<MovieDto[]> {
         const movieIds = movieList.map(movie => movie.id);
         const movieComments = movieIds.map(movieId => this.getCommentCount(movieId));
         const resolvedComments = await Promise.all(movieComments);

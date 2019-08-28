@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { HttpExceptionFilter } from './http-exception.filter';
 import * as helmet from 'helmet';
 import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
@@ -12,21 +13,22 @@ process.env.TZ = 'UTC';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(expressRequestId());
-  app.use(bodyParser());
+  // app.use(expressRequestId());
+  // app.use(bodyParser());
   app.use(helmet());
   app.use(cookieParser());
   app.use(csurf({
     cookie: true,
     // ignoreMethods: ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
   }));
-  // app.enableCors();
-  app.enableCors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    preflightContinue: true,
-    optionsSuccessStatus: 200,
-  });
+  app.enableCors();
+  app.useGlobalFilters(new HttpExceptionFilter());
+  // app.enableCors({
+  //   origin: '*',
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  //   preflightContinue: true,
+  //   optionsSuccessStatus: 200,
+  // });
   const options = new DocumentBuilder()
     .setTitle('Star Wars Api')
     .setDescription('App for communicating with the Star Wars API')
