@@ -49,12 +49,12 @@ export class MoviesService {
             movie.commentCount = await this.getCommentCount(movieId);
             return movie;
         }
-        movie = this.getMovieFromRemote(path, movieId);
+        movie = this.getMovieFromRemote(path);
         movie.commentCount = await this.getCommentCount(movieId);
         return movie;
     }
 
-    async getMovieFromRemote(path, movieId) {
+    async getMovieFromRemote(path) {
         const resp: any = await this.requestService.fetch(path);
         const movie = this.retrieveFields(resp);
         this.requestService.storeInRedis(path, JSON.stringify(movie));
