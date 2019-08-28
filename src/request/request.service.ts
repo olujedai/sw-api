@@ -1,8 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import rp = require('request-promise-native');
+import * as rp from 'request-promise-native';
+import { promisify } from 'util';
+import * as redis from 'redis';
+
+const redisUrl = process.env.REDIS_URL;
+const client = redis.createClient({
+    url: redisUrl,
+});
 
 @Injectable()
 export class RequestService {
+    storeInRedis = promisify(client.set).bind(client);
+    getFromRedis = promisify(client.get).bind(client);
+
     async fetch(path) {
         const endpoint = process.env.SWAPI_URL || 'https://swapi.co/api';
         const options = {
