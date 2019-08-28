@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { HttpExceptionFilter } from './http-exception.filter';
+import { AllExceptionsFilter } from './all-exception.filter';
 import * as helmet from 'helmet';
 import * as csurf from 'csurf';
 import * as cookieParser from 'cookie-parser';
@@ -22,7 +22,7 @@ async function bootstrap() {
     // ignoreMethods: ['GET', 'POST', 'PUT', 'HEAD', 'OPTIONS'],
   }));
   app.enableCors();
-  app.useGlobalFilters(new HttpExceptionFilter());
+  app.useGlobalFilters(new AllExceptionsFilter());
   // app.enableCors({
   //   origin: '*',
   //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
