@@ -40,8 +40,6 @@ $ yarn start:dev
 # in docker
 $ yarn start:docker
 
-# production mode
-$ yarn start:prod
 ```
 
 ## Test
