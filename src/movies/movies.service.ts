@@ -3,7 +3,6 @@ import { MovieDto } from './movies.dto';
 import { RequestService } from '../request/request.service';
 import { UtilsService } from '../utils/utils.service';
 import { CommentService } from '../comment/comment.service';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable()
 export class MoviesService {
@@ -22,14 +21,14 @@ export class MoviesService {
         }
         movies = await this.getMoviesFromRemote(path);
         movies = await this.processMovies(movies);
+        this.requestService.storeInRedis(path, JSON.stringify(movies));
         return movies;
     }
 
-    async getMoviesFromRemote(path) {
+    async getMoviesFromRemote(path: string) {
         const resp: any = await this.requestService.fetch(path);
         const movieList: MovieDto[] = resp.results.map(movie => this.retrieveFields(movie));
         const movies = await this.processMovies(movieList);
-        this.requestService.storeInRedis(path, JSON.stringify(movies));
         return movies;
     }
 
@@ -44,7 +43,7 @@ export class MoviesService {
         return movieList;
     }
 
-    async getMovie(movieId): Promise<MovieDto> {
+    async getMovie(movieId: number): Promise<MovieDto> {
         const path: string = `films/${movieId}`;
         let movie = await this.requestService.getFromRedis(path);
         if (movie) {
@@ -54,13 +53,13 @@ export class MoviesService {
         }
         movie = this.getMovieFromRemote(path);
         movie.commentCount = await this.getCommentCount(movieId);
+        this.requestService.storeInRedis(path, JSON.stringify(movie));
         return movie;
     }
 
-    async getMovieFromRemote(path) {
+    async getMovieFromRemote(path: string) {
         const resp: any = await this.requestService.fetch(path);
         const movie = this.retrieveFields(resp);
-        this.requestService.storeInRedis(path, JSON.stringify(movie));
         return movie;
     }
 
@@ -75,7 +74,7 @@ export class MoviesService {
         };
     }
 
-    getCommentCount(movieId): Promise<number> {
+    getCommentCount(movieId: number): Promise<number> {
         const filter = {
             movieId,
         };
