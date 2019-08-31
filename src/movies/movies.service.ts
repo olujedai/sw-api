@@ -3,6 +3,7 @@ import { MovieDto } from './movies.dto';
 import { RequestService } from '../request/request.service';
 import { UtilsService } from '../utils/utils.service';
 import { CommentService } from '../comment/comment.service';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable()
 export class MoviesService {
@@ -16,9 +17,11 @@ export class MoviesService {
         const path: string = 'films';
         let movies = await this.requestService.getFromRedis(path);
         if (movies) {
-            return JSON.parse(movies);
+            movies = JSON.parse(movies);
+            return await this.processMovies(movies);
         }
         movies = await this.getMoviesFromRemote(path);
+        movies = await this.processMovies(movies);
         return movies;
     }
 
