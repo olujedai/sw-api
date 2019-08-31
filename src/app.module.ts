@@ -7,6 +7,7 @@ import { CharacterModule } from './character/character.module';
 import { UtilsModule } from './utils/utils.module';
 import { CommentModule } from './comment/comment.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { LoggerModule } from './logger/logger.module';
 
 @Module({
   imports: [MoviesModule, RequestModule, CharacterModule, UtilsModule, CommentModule,
@@ -20,6 +21,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
