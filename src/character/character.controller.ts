@@ -12,15 +12,15 @@ import { ApiUseTags } from '@nestjs/swagger';
 export class CharacterController {
     constructor(
         private readonly characterService: CharacterService,
-        private readonly moviesService: MoviesService,
+        // private readonly moviesService: MoviesService,
     ) {}
 
-    @Get(':movieId')
-    async getCharacters(@Param() params: CharacterParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
-        const {name, gender, height, order, sort, filter} = query;
-        const movieId = params.movieId;
-        const movie: MovieDto = await this.moviesService.getMovie(movieId);
-        const characters = movie.characters;
-        return await this.characterService.getCharacters(characters, name, gender, height, order, sort, filter);
-    }
+    // @Get(':movieId')
+    // async getCharacters(@Param() params: CharacterParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
+    //     const {name, gender, height, order, sort, filter} = query;
+    //     const movieId = params.movieId;
+    //     const movie: MovieDto = await this.moviesService.getMovie(movieId);
+    //     const characters = movie.characters;
+    //     return await this.characterService.getCharacters(characters, name, gender, height, order, sort, filter);
+    // }
 }

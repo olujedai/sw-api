@@ -20,6 +20,7 @@ export class MoviesService {
             return await this.processMovies(movies);
         }
         movies = await this.getMoviesFromRemote(path);
+        movies = movies.map(movie => this.retrieveFields(movie));
         movies = await this.processMovies(movies);
         this.requestService.storeInRedis(path, JSON.stringify(movies));
         return movies;
@@ -27,9 +28,7 @@ export class MoviesService {
 
     async getMoviesFromRemote(path: string) {
         const resp: any = await this.requestService.fetch(path);
-        const movieList: MovieDto[] = resp.results.map(movie => this.retrieveFields(movie));
-        const movies = await this.processMovies(movieList);
-        return movies;
+        return resp.results;
     }
 
     async processMovies(movieList: MovieDto[]): Promise<MovieDto[]> {
@@ -48,19 +47,20 @@ export class MoviesService {
         let movie = await this.requestService.getFromRedis(path);
         if (movie) {
             movie = JSON.parse(movie);
-            movie.commentCount = await this.getCommentCount(movieId);
             return movie;
         }
-        movie = this.getMovieFromRemote(path);
-        movie.commentCount = await this.getCommentCount(movieId);
+        const resp = await this.getMovieFromRemote(path);
+        if (resp == null) {
+            return resp;
+        }
+        movie = this.retrieveFields(resp);
         this.requestService.storeInRedis(path, JSON.stringify(movie));
         return movie;
     }
 
     async getMovieFromRemote(path: string) {
         const resp: any = await this.requestService.fetch(path);
-        const movie = this.retrieveFields(resp);
-        return movie;
+        return resp;
     }
 
     retrieveFields(movie): MovieDto {

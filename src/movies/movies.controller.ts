@@ -2,9 +2,12 @@ import { Request } from 'express';
 import { Controller, Get, Query, Param, Req, Body, Post, Header } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { CommentService } from '../comment/comment.service';
-import { CommentParamDto } from '../comment/comment.param.dto';
 import { CommentDto } from '../comment/comment.dto';
 import { Comment } from '../comment/comment.entity';
+import { CharacterService } from '../character/character.service';
+import { CharactersDto } from '../character/characters.dto';
+import { MovieParamDto } from './movies.param.dto';
+import { CharacterQueryDto } from '../character/character.query.dto';
 import { MoviesService } from './movies.service';
 import { MovieDto } from './movies.dto';
 import { UtilsService } from '../utils/utils.service';
@@ -15,6 +18,7 @@ export class MoviesController {
     constructor(
       private readonly movieService: MoviesService,
       private readonly commentService: CommentService,
+      private readonly characterService: CharacterService,
       private readonly utilsService: UtilsService,
     ) {}
 
@@ -24,7 +28,7 @@ export class MoviesController {
     }
 
     @Get(':movieId/comments')
-    async findAllMovieComments(@Param() param: CommentParamDto, @Query() query) {
+    async findAllMovieComments(@Param() param: MovieParamDto, @Query() query) {
         const movieId = param.movieId;
         const { skip, size } = query;
         const filter = {
@@ -41,10 +45,19 @@ export class MoviesController {
 
     @Post(':movieId/comments')
     @Header('Content-Type', 'application/json')
-    async saveComment(@Param() param: CommentParamDto, @Req() request: Request, @Body() body: CommentDto): Promise<Comment> {
+    async saveComment(@Param() param: MovieParamDto, @Req() request: Request, @Body() body: CommentDto): Promise<Comment> {
         const movieId = param.movieId;
         const ipAddress = this.utilsService.getIpAddress(request);
         const {comment, commenter} = body;
         return await this.commentService.createComment(movieId, ipAddress, comment, commenter);
+    }
+
+    @Get(':movieId/characters')
+    async getCharacters(@Param() params: MovieParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
+        const {name, gender, height, order, sort, filter} = query;
+        const movieId: number = params.movieId;
+        const movie: MovieDto = await this.movieService.getMovie(movieId);
+        const characters = movie.characters;
+        return await this.characterService.getCharacters(characters, name, gender, height, order, sort, filter);
     }
 }

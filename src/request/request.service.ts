@@ -13,7 +13,7 @@ export class RequestService {
     storeInRedis = promisify(client.set).bind(client);
     getFromRedis = promisify(client.get).bind(client);
 
-    async fetch(path) {
+    async fetch(path: string) {
         const endpoint = process.env.SWAPI_URL || 'https://swapi.co/api';
         const options = {
             uri: `${endpoint}/${path}`,
@@ -22,15 +22,30 @@ export class RequestService {
             simple: true,
             json: true,
         };
-        return rp(options);
+        return rp(options).then(
+            (resp) => {
+            return resp;
+        })
+        .catch((err) => {
+            if (err.statusCode === 400) {
+                return null;
+            }
+        });
     }
-    async fetchUrl(url) {
+
+    async fetchUrl(url: string) {
         const options = {
             uri: url,
             method: 'GET',
             simple: true,
             json: true,
         };
-        return rp(options);
+        return rp(options).then(
+            (resp) => {
+            return resp;
+        })
+        .catch((err) => {
+            return null;
+        });
     }
 }
