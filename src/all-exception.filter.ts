@@ -11,10 +11,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    // console.log({exception});
-    // console.log(exception.response.message[0].constraints.customText);
-    // console.log({status});
-    const responseMessage: string = status === 400 ? exception.response.message[0].constraints.customText :
+    const responseMessage: string = status === HttpStatus.BAD_REQUEST ? exception.response.message :
     'An error occured. We are working on it. Please try back later.';
     response.status(status).json({
       statusCode: 400,
