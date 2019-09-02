@@ -11,19 +11,22 @@ export class UtilsService {
         const valA = a[key];
         const valB = b[key];
         if ( this.isAString(valA) && this.isAString(valB) ) {
-            a = a.toUpperCase();
-            b = b.toUpperCase();
+            a = valA.toUpperCase();
+            b = valB.toUpperCase();
         }
+
         if ( this.isANumber(valA) && this.isANumber(valB) ) {
-            a = Number(a);
-            b = Number(b);
+            a = Number(valA);
+            b = Number(valB);
         }
+
         let comparison = 0;
         if (valA > valB) {
             comparison = 1;
         } else if (valA < valB) {
             comparison = -1;
         }
+
         return (
             (order.toLowerCase() === 'desc') ? (comparison * -1) : comparison
         );
