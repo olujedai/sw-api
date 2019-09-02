@@ -11,7 +11,7 @@ export class CharacterService {
         private readonly utilsService: UtilsService,
     ) {}
 
-    async getCharacters(characters: string[], name, gender, height, order, sort, filter): Promise<CharactersDto> {
+    async getCharacters(characters: string[], name, gender, height, order): Promise<CharactersDto> {
         const characterPromisesList = [];
         let characterList = [];
         characters.map(characterUrl => {
@@ -25,7 +25,7 @@ export class CharacterService {
         });
         characterList = characterList.concat(resolvedPromisesList);
         const allCharacters = characterList.map(character => this.retrieveFields(character));
-        const movieCharacters = this.processCharacters(allCharacters, name, gender, height, order, sort, filter);
+        const movieCharacters = this.processCharacters(allCharacters, name, gender, height, order);
         return movieCharacters;
     }
 
@@ -42,11 +42,11 @@ export class CharacterService {
         return obj !== undefined && obj !== null && obj.constructor === Object;
     }
 
-    processCharacters(allCharacters, name, gender, height, order, sort, filter) {
-        if (filter === 'true') {
+    processCharacters(allCharacters, name, gender, height, order) {
+        if (gender) {
             allCharacters = allCharacters.filter(character => this.filterByGender(character, gender));
         }
-        if (sort === 'true') {
+        if (name || gender ||  height || order) {
             allCharacters = this.sort(allCharacters, name, gender, height, order);
         }
         const totalNumberOfCharacters = allCharacters.length;
@@ -55,41 +55,24 @@ export class CharacterService {
         return movieCharacters;
     }
     filterByGender(character: CharacterDto, gender: string) {
-        return character.gender === this.getGender(gender);
+        return character.gender.toLowerCase() === gender.toLowerCase();
     }
 
     sort(allCharacters, name, gender, height, order) {
         if (name === 'true') {
-            return allCharacters.sort(this.utilsService.sortFunction('name', order));
+            allCharacters = allCharacters.sort(this.utilsService.sortFunction('name', order));
         }
-        if (gender === 'true') {
-            return allCharacters.sort(this.utilsService.sortFunction('gender', order));
+        if (gender) {
+            allCharacters = allCharacters.sort(this.utilsService.sortFunction('gender', order));
         }
         if (height === 'true') {
-            return allCharacters.sort(this.utilsService.sortFunction('height', order));
+            allCharacters = allCharacters.sort(this.utilsService.sortFunction('height', order));
         }
         return allCharacters;
     }
-    getGender(gender) {
-        if (gender.toLowerCase() === 'male') {
-            return 'male';
-        }
-        if (gender.toLowerCase() === 'female') {
-            return 'female';
-        }
 
-        if (gender.toLowerCase() === 'hermaphrodite') {
-            return 'hermaphrodite';
-        }
-
-        if (gender.toLowerCase() === 'n/a') {
-            return 'n/a';
-        }
-
-        if (gender.toLowerCase() === 'none') {
-            return 'none';
-        }
-        return null;
+    formatGender(gender) {
+        return gender.toLowerCase();
     }
 
     calculateHeightInCm(characterList: CharacterDto[]): number {
@@ -130,7 +113,7 @@ export class CharacterService {
     retrieveFields(character) {
         return {
             name: character.name,
-            gender: this.getGender(character.gender),
+            gender: this.formatGender(character.gender),
             height: this.utilsService.isANumber(character.height) ? Number(character.height) : character.height,
         };
     }
