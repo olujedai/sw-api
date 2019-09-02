@@ -67,7 +67,7 @@ export class MoviesService {
         return {
             id: movie.episode_id,
             name: movie.title,
-            releaseDate: new Date(movie.release_date),
+            releaseDate: movie.release_date,
             openingCrawl: movie.opening_crawl,
             characters: movie.characters,
             commentCount: 0,

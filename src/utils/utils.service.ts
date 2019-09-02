@@ -8,9 +8,16 @@ export class UtilsService {
             return 0;
         }
 
-        let valA = a[key];
-        let valB = b[key];
-        [valA, valB] = this.convertToType(valA, valB);
+        const valA = a[key];
+        const valB = b[key];
+        if ( this.isAString(valA) && this.isAString(valB) ) {
+            a = a.toUpperCase();
+            b = b.toUpperCase();
+        }
+        if ( this.isANumber(valA) && this.isANumber(valB) ) {
+            a = Number(a);
+            b = Number(b);
+        }
         let comparison = 0;
         if (valA > valB) {
             comparison = 1;
@@ -30,24 +37,6 @@ export class UtilsService {
         return !Number.isNaN(Number(a));
     }
 
-    convertToType(a, b) {
-        if ( Object.prototype.toString.call(a) === '[object Date]' && Object.prototype.toString.call(b) === '[object Date]') {
-            a = new Date(a);
-            b = new Date(b);
-            return [a, b];
-        }
-        if ( this.isAString(a) && this.isAString(b) ) {
-            a = a.toUpperCase();
-            b = b.toUpperCase();
-            return [a, b];
-        }
-        if ( this.isANumber(a) && this.isANumber(b) ) {
-            a = Number(a);
-            b = Number(b);
-            return [a, b];
-        }
-        return [a, b];
-    }
     getIpAddress = (request) => {
         return (request.headers['x-forwarded-for'] || '').split(',').pop() || request.connection.remoteAddress;
     }
