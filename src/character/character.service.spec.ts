@@ -10,12 +10,9 @@ const character = JSON.parse(characterJson.toString());
 const charactersJson = fs.readFileSync(`${__dirname}/static/characters.json`);
 const characters = JSON.parse(charactersJson.toString());
 
-let name = 'false';
-let gender = 'male';
-let height = 'false';
-const order = 'asc';
-let sort = 'false';
-let filter = 'false';
+let order = 'asc';
+let sort = 'name';
+let filter = 'female';
 
 describe('CharacterService', () => {
     let characterService: CharacterService;
@@ -39,44 +36,37 @@ describe('CharacterService', () => {
     });
 
     it('should return processedCharacters', () => {
-        const response = characterService.processCharacters([character], name, gender, height, order, sort, filter);
+        order = undefined;
+        sort = undefined;
+        filter = undefined;
+        const response = characterService.processCharacters([character], sort, order, filter);
         expect(response.characters[0].name).toBe(character.name);
-        expect(response.characters[0].gender).toBe(characterService.getGender(character.gender));
+        expect(response.characters[0].gender).toBe(characterService.formatGender(character.gender));
         expect(response.characters[0].height).toBe(character.height);
     });
 
     it('should sort characters by name', () => {
-        sort = 'true';
-        gender = 'false';
-        height = 'false';
-        name = 'true';
-        const response = characterService.processCharacters(characters, name, gender, height, order, sort, filter);
+        sort = 'name';
+        const response = characterService.processCharacters(characters, sort, order, filter);
         expect(response.characters[characters.length - 1].name).toBe(character.name);
         expect(response.characters[0].name).toBe('C-3PO');
     });
 
     it('should sort characters by gender', () => {
-        sort = 'true';
-        gender = 'true';
-        height = 'false';
-        name = 'false';
-        const response = characterService.processCharacters(characters, name, gender, height, order, sort, filter);
+        sort = 'gender';
+        const response = characterService.processCharacters(characters, sort, order, filter);
         expect(response.characters[0].name).toBe('Leia Organa');
     });
 
     it('should sort characters by height', () => {
-        sort = 'true';
-        height = 'true';
-        name = 'false';
-        gender = 'false';
-        const response = characterService.processCharacters(characters, name, gender, height, order, sort, filter);
+        sort = 'height';
+        const response = characterService.processCharacters(characters, sort, order, filter);
         expect(response.characters[0].name).toBe('Leia Organa');
     });
 
     it('should filter characters by gender', () => {
-        gender = 'female';
-        filter = 'true';
-        const response = characterService.processCharacters(characters, name, gender, height, order, sort, filter);
+        filter = 'female';
+        const response = characterService.processCharacters(characters, sort, order, filter);
         expect(response.characters[0].name).toBe('Leia Organa');
     });
 });
