@@ -1,5 +1,8 @@
 import { Entity, Column, CreateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
+/**
+ * Comment database table definition
+ */
 @Entity()
 export class Comment {
   @PrimaryGeneratedColumn()

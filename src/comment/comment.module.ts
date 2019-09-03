@@ -4,6 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Comment } from './comment.entity';
 import { UtilsModule } from '../utils/utils.module';
 
+/**
+ * The providers, imports and exports of the Comment module are registered here
+ */
+
 @Module({
   imports: [TypeOrmModule.forFeature([Comment]), UtilsModule],
   providers: [CommentService],
