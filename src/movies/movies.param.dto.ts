@@ -1,6 +1,6 @@
 import { ApiModelProperty } from '@nestjs/swagger';
 import { Validate } from 'class-validator';
-import { MovieExists } from './movies.validator';
+import { MovieExists } from './dto/movieExists.validator';
 
 export class MovieParamDto {
     @ApiModelProperty(

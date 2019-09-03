@@ -1,8 +1,10 @@
-// import * as Joi from '@hapi/joi';
 import {ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments} from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { MoviesService } from './movies.service';
+import { MoviesService } from '../movies.service';
 
+/**
+ * Custom validator that checks if a movieId exists
+ */
 @Injectable()
 @ValidatorConstraint({ name: 'customText', async: false })
 export class MovieExists implements ValidatorConstraintInterface {

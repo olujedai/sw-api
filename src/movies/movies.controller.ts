@@ -2,16 +2,18 @@ import { Request } from 'express';
 import { Controller, Get, Query, Param, Req, Body, Post, Header } from '@nestjs/common';
 import { ApiUseTags } from '@nestjs/swagger';
 import { CommentService } from '../comment/comment.service';
-import { CommentDto } from '../comment/comment.dto';
+import { CommentDto } from '../comment/dto/comment.dto';
 import { Comment } from '../comment/comment.entity';
 import { CharacterService } from '../character/character.service';
-import { CharactersDto } from '../character/characters.dto';
+import { CharactersDto } from '../character/dto/characters.dto';
 import { MovieParamDto } from './movies.param.dto';
-import { CharacterQueryDto } from '../character/character.query.dto';
+import { CharacterQueryDto } from '../character/dto/character.query.dto';
 import { MoviesService } from './movies.service';
-import { MovieDto } from './movies.dto';
+import { MovieDto } from './dto/movies.dto';
 import { UtilsService } from '../utils/utils.service';
-
+/*
+Provides methods for accepting requests and responding to them
+*/
 @ApiUseTags('sw-api')
 @Controller('movies')
 export class MoviesController {
@@ -54,10 +56,10 @@ export class MoviesController {
 
     @Get(':movieId/characters')
     async getCharacters(@Param() params: MovieParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
-        const {name, gender, height, order} = query;
+        const {sort, order, filter} = query;
         const movieId: number = params.movieId;
         const movie: MovieDto = await this.movieService.getMovie(movieId);
         const characters = movie.characters;
-        return await this.characterService.getCharacters(characters, name, gender, height, order);
+        return await this.characterService.getCharacters(characters, sort, order, filter);
     }
 }
