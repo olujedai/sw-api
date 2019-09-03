@@ -4,6 +4,9 @@ import { Request, RequestHandler, Response } from 'express';
 import * as morgan from 'morgan';
 import { LOG_FORMAT } from './logger.constant';
 
+/**
+ * The application logger based on winston and morgan is defined here.
+ */
 @Injectable()
 export class LoggerService implements NestLoggerService {
 
