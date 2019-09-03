@@ -40,6 +40,7 @@
     "morgan": "^1.9.1",
     "pg": "^7.12.1",
     "redis": "^2.8.0",
+    "redis-mock": "^0.46.0",
     "reflect-metadata": "^0.1.12",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",

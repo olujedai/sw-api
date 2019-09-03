@@ -3,8 +3,12 @@ import * as rp from 'request-promise-native';
 import { promisify } from 'util';
 import * as redis from 'redis';
 
+/*
+Provides methods that implement logic for interacting with the cache and remote APIs
+*/
+
 const redisUrl = process.env.REDIS_URL;
-const client = redis.createClient({
+export const client = redis.createClient({
     url: redisUrl,
 });
 

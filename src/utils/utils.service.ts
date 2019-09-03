@@ -2,22 +2,35 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class UtilsService {
-    sortFunction = (key: string, order: string = 'asc') => (a, b) => {
+    sortFunction = (key: string, order: string = 'asc') => (a, b): number => {
+        /**
+         * Method used for sorting an array of objects by the compareFunction array sort function.
+         * @param key the property in the object to be used for sorting
+         * @param order the order in which the objects will be sorted
+         * @param a the first object to be compared
+         * @param b the second object to be compared
+         */
         if (!Object.prototype.hasOwnProperty.call(a, key)
             || !Object.prototype.hasOwnProperty.call(b, key)) {
             return 0;
         }
 
-        const valA = a[key];
-        const valB = b[key];
-        if ( this.isAString(valA) && this.isAString(valB) ) {
-            a = valA.toUpperCase();
-            b = valB.toUpperCase();
+        let valA = a[key];
+        let valB = b[key];
+        if (this.isAString(valA)) {
+            valA = valA.toUpperCase();
         }
 
-        if ( this.isANumber(valA) && this.isANumber(valB) ) {
-            a = Number(valA);
-            b = Number(valB);
+        if (this.isAString(valB)) {
+            valB = valB.toUpperCase();
+        }
+
+        if (this.isANumber(valA)) {
+            valA = Number(valA);
+        }
+
+        if (this.isANumber(valB)) {
+            valB = Number(valB);
         }
 
         let comparison = 0;
@@ -26,10 +39,7 @@ export class UtilsService {
         } else if (valA < valB) {
             comparison = -1;
         }
-
-        return (
-            (order.toLowerCase() === 'desc') ? (comparison * -1) : comparison
-        );
+        return (order.toLowerCase() === 'desc') ? (comparison * -1) : comparison;
     }
 
     isAString = (a) => {
