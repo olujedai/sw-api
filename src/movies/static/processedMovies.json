@@ -121,7 +121,7 @@
             "https://swapi.co/api/people/47/",
             "https://swapi.co/api/people/35/"
         ],
-        "commentCount": 3
+        "commentCount": 0
     },
     {
         "id": 2,
@@ -233,6 +233,6 @@
             "https://swapi.co/api/people/87/",
             "https://swapi.co/api/people/88/"
         ],
-        "commentCount": 2
+        "commentCount": 0
     }
 ]

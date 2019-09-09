@@ -22,7 +22,6 @@ export class RequestService {
         const options = {
             uri: `${endpoint}/${path}`,
             method: 'GET',
-            // qs: queryObject,
             simple: true,
             json: true,
         };

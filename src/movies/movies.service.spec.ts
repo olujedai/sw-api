@@ -7,8 +7,14 @@ import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/comment.entity';
 import * as fs from 'fs';
 
-const moviesJson = fs.readFileSync(`${__dirname}/static/movies.json`);
-const movies = JSON.parse(moviesJson.toString());
+const processedMoviesJson = fs.readFileSync(`${__dirname}/static/processedMovies.json`);
+const processedMovies = JSON.parse(processedMoviesJson.toString());
+
+const rawMoviesJson = fs.readFileSync(`${__dirname}/static/raw.movies.json`);
+const rawMovies = JSON.parse(rawMoviesJson.toString());
+
+const rawMovieJson = fs.readFileSync(`${__dirname}/static/raw.movie.json`);
+const rawMovie = JSON.parse(rawMovieJson.toString());
 
 describe('Movie service', () => {
     let requestService: RequestService;
@@ -43,9 +49,39 @@ describe('Movie service', () => {
         expect(utilsService).toBeDefined();
     });
 
-    it('should return a list of movies', async () => {
-        jest.spyOn(movieService, 'getMovies').mockResolvedValueOnce(movies);
-        expect(await movieService.getMovies()).toBe(movies);
+    it('should return a list of processed movies', async () => {
+        jest.spyOn(movieService, 'getMovies').mockResolvedValue(processedMovies);
+        expect(await movieService.getMovies()).toBe(processedMovies);
     });
 
+    it('should return a list of raw movies', async () => {
+        jest.spyOn(movieService, 'getMoviesFromRemote').mockResolvedValue(rawMovies.results);
+        expect(await movieService.getMoviesFromRemote('films')).toBe(rawMovies.results);
+    });
+
+    it('should return a single movie', async () => {
+        jest.spyOn(movieService, 'getMovieFromRemote').mockResolvedValue(rawMovie);
+        expect(await movieService.getMovieFromRemote('films/1/')).toBe(rawMovie);
+    });
+
+    it('should retrieve the required fields from an external API', async () => {
+        const movie = movieService.retrieveFields(rawMovie);
+        expect(movie).toEqual(
+            expect.objectContaining({
+                id: expect.any(Number),
+                name: expect.any(String),
+                releaseDate: expect.any(String),
+                openingCrawl: expect.any(String),
+                characters: expect.any(Array),
+                commentCount: expect.any(Number),
+            }),
+        );
+    });
+
+    it('takes in raw movies and returns the procesed result.', async () => {
+        jest.spyOn(movieService, 'getCommentCount').mockResolvedValue(0);
+        let movieArray = rawMovies.results.map(movie => movieService.retrieveFields(movie));
+        movieArray = await movieService.processMovies(movieArray);
+        expect(movieArray).toEqual(processedMovies);
+    });
 });

@@ -98,6 +98,7 @@ export class MoviesService {
          * @param movie the movie object from a remote api
          * @returns a MovieDto object
          */
+        console.log(JSON.parse(JSON.stringify(movie)));
         return {
             id: movie.episode_id,
             name: movie.title,
