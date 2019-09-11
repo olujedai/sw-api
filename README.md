@@ -26,7 +26,7 @@ It will take a fair bit of time the first time you do it, subsequently it will b
 
 8. Launch the containers using ```docker-compose up``` .
 
-9. Navigate to  ```http://localhost:3000``` on your computer to view the openapi documentation.
+9. Navigate to  ```http://localhost:3000/docs``` on your computer to view the openapi documentation.
 
 ## Running the app
 
