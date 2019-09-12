@@ -7,18 +7,18 @@ import { CharacterDto } from './dto/character.dto';
 import { CharactersDto } from './dto/characters.dto';
 import { FeetDto } from './dto/feet.dto';
 
-const characterJson = fs.readFileSync(`${__dirname}/static/oneCharacter.json`);
-const character = JSON.parse(characterJson.toString());
+const characterJson: Buffer = fs.readFileSync(`${__dirname}/static/oneCharacter.json`);
+const character: CharacterDto = JSON.parse(characterJson.toString());
 
-const charactersJson = fs.readFileSync(`${__dirname}/static/characters.json`);
-const characters = JSON.parse(charactersJson.toString());
+const charactersJson: Buffer = fs.readFileSync(`${__dirname}/static/characters.json`);
+const characters: CharacterDto[] = JSON.parse(charactersJson.toString());
 
-const processedCharactersJson = fs.readFileSync(`${__dirname}/static/processedCharacters.json`);
-const processedCharacters = JSON.parse(processedCharactersJson.toString());
+const processedCharactersJson: Buffer = fs.readFileSync(`${__dirname}/static/processedCharacters.json`);
+const processedCharacters: CharactersDto = JSON.parse(processedCharactersJson.toString());
 
-const order = 'asc';
-let sort = 'name';
-let filter = null;
+const order: string = 'asc';
+let sort: string = 'name';
+let filter: string|null|undefined = null;
 
 describe('CharacterService', () => {
     let characterService: CharacterService;

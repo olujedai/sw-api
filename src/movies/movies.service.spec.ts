@@ -6,15 +6,18 @@ import { UtilsService } from '../utils/utils.service';
 import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/comment.entity';
 import * as fs from 'fs';
+import { MovieDto } from './dto/movies.dto';
+import { RemoteMovieObjectDto } from './dto/remoteMovie.dto';
+import { RemoteMoviesObjectDto } from './dto/remoteMovies.dto';
 
-const processedMoviesJson = fs.readFileSync(`${__dirname}/static/processedMovies.json`);
-const processedMovies = JSON.parse(processedMoviesJson.toString());
+const processedMoviesJson: Buffer = fs.readFileSync(`${__dirname}/static/processedMovies.json`);
+const processedMovies: MovieDto[] = JSON.parse(processedMoviesJson.toString());
 
-const rawMoviesJson = fs.readFileSync(`${__dirname}/static/raw.movies.json`);
-const rawMovies = JSON.parse(rawMoviesJson.toString());
+const rawMoviesJson: Buffer = fs.readFileSync(`${__dirname}/static/raw.movies.json`);
+const rawMovies: RemoteMoviesObjectDto = JSON.parse(rawMoviesJson.toString());
 
 const rawMovieJson = fs.readFileSync(`${__dirname}/static/raw.movie.json`);
-const rawMovie = JSON.parse(rawMovieJson.toString());
+const rawMovie: RemoteMovieObjectDto = JSON.parse(rawMovieJson.toString());
 
 describe('Movie service', () => {
     let requestService: RequestService;
@@ -65,7 +68,7 @@ describe('Movie service', () => {
     });
 
     it('should retrieve the required fields from an external API', async () => {
-        const movie = movieService.retrieveFields(rawMovie);
+        const movie: MovieDto = movieService.retrieveFields(rawMovie);
         expect(movie).toEqual(
             expect.objectContaining({
                 id: expect.any(Number),
@@ -80,7 +83,7 @@ describe('Movie service', () => {
 
     it('takes in raw movies and returns the procesed result.', async () => {
         jest.spyOn(movieService, 'getCommentCount').mockResolvedValue(0);
-        let movieArray = rawMovies.results.map(movie => movieService.retrieveFields(movie));
+        let movieArray: MovieDto[] = rawMovies.results.map(movie => movieService.retrieveFields(movie));
         movieArray = await movieService.getMovieCommentsAndSort(movieArray);
         expect(movieArray).toEqual(processedMovies);
     });
