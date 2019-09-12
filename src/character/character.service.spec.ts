@@ -6,12 +6,19 @@ import * as fs from 'fs';
 import { CharacterDto } from './dto/character.dto';
 import { CharactersDto } from './dto/characters.dto';
 import { FeetDto } from './dto/feet.dto';
+import { RemoteCharacterObjectDto } from './dto/apiResponse.dto';
 
-const characterJson: Buffer = fs.readFileSync(`${__dirname}/static/oneCharacter.json`);
-const character: CharacterDto = JSON.parse(characterJson.toString());
+const appCharacterJson: Buffer = fs.readFileSync(`${__dirname}/static/appCharacter.json`);
+const appCharacter: CharacterDto = JSON.parse(appCharacterJson.toString());
 
-const charactersJson: Buffer = fs.readFileSync(`${__dirname}/static/characters.json`);
-const characters: CharacterDto[] = JSON.parse(charactersJson.toString());
+const appCharacterListJson: Buffer = fs.readFileSync(`${__dirname}/static/appCharacterList.json`);
+const appCharacterList: CharacterDto[] = JSON.parse(appCharacterListJson.toString());
+
+const remoteCharacterJson: Buffer = fs.readFileSync(`${__dirname}/static/oneCharacter.json`);
+const remoteCharacter: RemoteCharacterObjectDto = JSON.parse(remoteCharacterJson.toString());
+
+const remoteCharactersJson: Buffer = fs.readFileSync(`${__dirname}/static/characters.json`);
+const remoteCharacterList: RemoteCharacterObjectDto[] = JSON.parse(remoteCharactersJson.toString());
 
 const processedCharactersJson: Buffer = fs.readFileSync(`${__dirname}/static/processedCharacters.json`);
 const processedCharacters: CharactersDto = JSON.parse(processedCharactersJson.toString());
@@ -43,31 +50,31 @@ describe('CharacterService', () => {
 
     it('should sort characters by name', () => {
         sort = 'name';
-        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(characters, sort, order, filter);
-        expect(response[characters.length - 1].name).toBe(character.name);
+        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(appCharacterList, sort, order, filter);
+        expect(response[appCharacterList.length - 1].name).toBe(remoteCharacter.name);
         expect(response[0].name).toBe('C-3PO');
     });
 
     it('should sort characters by gender', () => {
         sort = 'gender';
-        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(characters, sort, order, filter);
+        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(appCharacterList, sort, order, filter);
         expect(response[0].name).toBe('Leia Organa');
     });
 
     it('should sort characters by height', () => {
         sort = 'height';
-        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(characters, sort, order, filter);
+        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(appCharacterList, sort, order, filter);
         expect(response[0].name).toBe('Leia Organa');
     });
 
     it('should filter characters by gender', () => {
         filter = 'female';
-        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(characters, sort, order, filter);
+        const response: CharacterDto[] = characterService.applyCharacterSortAndFilter(appCharacterList, sort, order, filter);
         expect(response[0].name).toBe('Leia Organa');
     });
 
     it('should retrieve the character fields we are concerned with', () => {
-        const response: CharacterDto = characterService.retrieveCharacterFields(character);
+        const response: CharacterDto = characterService.retrieveCharacterFields(remoteCharacter);
         expect(response).toEqual({ name: 'Luke Skywalker', gender: 'male', height: 172 });
     });
 
@@ -77,7 +84,7 @@ describe('CharacterService', () => {
     });
 
     it('should calculate the height of all the characters in centimeters', () => {
-        const characterList: CharacterDto[] = characters.map(ch => characterService.retrieveCharacterFields(ch));
+        const characterList: CharacterDto[] = remoteCharacterList.map(ch => characterService.retrieveCharacterFields(ch));
         const response: number = characterService.calculateHeightInCm(characterList);
         expect(response).toBe(664);
     });
@@ -89,7 +96,7 @@ describe('CharacterService', () => {
 
     it('should return the characters in the required format', () => {
         filter = 'female';
-        const sortedAndFIlteredCharacters: CharacterDto[] = characterService.applyCharacterSortAndFilter(characters, sort, order, filter);
+        const sortedAndFIlteredCharacters: CharacterDto[] = characterService.applyCharacterSortAndFilter(appCharacterList, sort, order, filter);
         const response: CharactersDto = characterService.getResponseFormat(sortedAndFIlteredCharacters, sortedAndFIlteredCharacters.length, 200);
         expect(response.metadata).toEqual({ total: 1, totalHeight: { cm: '200cm', feet: '6ft. 7in.' }});
     });
@@ -102,15 +109,15 @@ describe('CharacterService', () => {
     });
 
     it('should return true for characters that fit a given gender and false otherwise', () => {
-        let response: boolean = characterService.filterMethod(character, 'male');
+        let response: boolean = characterService.filterMethod(appCharacter, 'male');
         expect(response).toBe(true);
-        response = characterService.filterMethod(character, 'female');
+        response = characterService.filterMethod(appCharacter, 'female');
         expect(response).toBe(false);
     });
 
     it('should return a list of processed characters', async () => {
         // jest.spyOn(characterService, 'getCharacters').mockResolvedValue(processedMovies);
-        jest.spyOn(characterService, 'getCharactersFromUrls').mockResolvedValue(characters);
+        jest.spyOn(characterService, 'getCharactersFromUrls').mockResolvedValue(remoteCharacterList);
         const characterUrls: string[] =  [
             'https://swapi.co/api/people/1/',
             'https://swapi.co/api/people/2/',
@@ -122,8 +129,8 @@ describe('CharacterService', () => {
     });
 
     it('should return one character', async () => {
-        jest.spyOn(characterService, 'getCharacter').mockResolvedValue(character);
+        jest.spyOn(characterService, 'getCharacter').mockResolvedValue(appCharacter);
         const response: string | CharacterDto = await characterService.getCharacter('https://swapi.co/api/people/1/');
-        expect(response).toEqual(character);
+        expect(response).toEqual(appCharacter);
     });
 });

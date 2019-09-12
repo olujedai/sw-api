@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Luke Skywalker", 
+        "height": "172", 
+        "gender": "male"
+    },
+    {
+        "name": "C-3PO", 
+        "height": "167", 
+        "gender": "n/a"
+    },
+    {
+        "name": "Leia Organa", 
+        "height": "150", 
+        "gender": "female"
+    },
+    {
+        "name": "Jabba Desilijic Tiure", 
+        "height": "175", 
+        "gender": "hermaphrodite"
+    }
+]
