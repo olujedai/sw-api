@@ -1,5 +1,5 @@
 // tslint:disable:variable-name
-export class RemoteMovieObjectDto {
+export class RemoteCharacterObjectDto {
     readonly name: string;
     readonly height: string;
     readonly mass: string;

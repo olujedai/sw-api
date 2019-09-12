@@ -1,0 +1,31 @@
+{ 
+    "metadata":{ 
+       "total":4,
+       "totalHeight":{ 
+          "cm":"664cm",
+          "feet":"21ft. 9in."
+       }
+    },
+    "characters":[ 
+       { 
+         "name":"Leia Organa",
+         "gender":"female",
+         "height":150
+      },
+      { 
+          "name":"C-3PO",
+          "gender":"n/a",
+          "height":167
+       },
+       { 
+         "name":"Luke Skywalker",
+         "gender":"male",
+         "height":172
+      },
+      { 
+          "name":"Jabba Desilijic Tiure",
+          "gender":"hermaphrodite",
+          "height":175
+       }
+    ]
+}

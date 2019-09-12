@@ -4,7 +4,7 @@ import { CharacterDto } from './dto/character.dto';
 import { CharactersDto } from './dto/characters.dto';
 import { UtilsService } from '../utils/utils.service';
 import { FeetDto } from './dto/feet.dto';
-import { RemoteMovieObjectDto } from './dto/apiResponse.dto';
+import { RemoteCharacterObjectDto } from './dto/apiResponse.dto';
 
 @Injectable()
 export class CharacterService {
@@ -23,15 +23,22 @@ export class CharacterService {
          * @returns an array of movie characters along with metadata indicating the total number of characters and their heights in
          * centimeters as well as feets and inches.
          */
+        const resolvedPromisesList: RemoteCharacterObjectDto[] = await this.getCharactersFromUrls(characters);
+        let allCharacters: CharacterDto[] = resolvedPromisesList.map(character => this.retrieveCharacterFields(character));
+        allCharacters = this.applyCharacterSortAndFilter(allCharacters, sort, order, filter);
+        return this.createCharacterResponseObject(allCharacters);
+    }
+
+    async getCharactersFromUrls(characters: string[]): Promise<RemoteCharacterObjectDto[]> {
+        /**
+         * This method requests for characters from redis or from the remote url.
+         */
         const characterPromisesList = [];
         characters.forEach(characterUrl => {
             const character = this.getCharacter(characterUrl);
             characterPromisesList.push(character);
         });
-        const resolvedPromisesList = await Promise.all(characterPromisesList);
-        const allCharacters = resolvedPromisesList.map(character => this.retrieveCharacterFields(character));
-        const movieCharacters = this.processCharacters(allCharacters, sort, order, filter);
-        return movieCharacters;
+        return await Promise.all(characterPromisesList);
     }
 
     async getCharacter(characterUrl: string): Promise<CharacterDto|string> {
@@ -51,17 +58,12 @@ export class CharacterService {
         return character;
     }
 
-    processCharacters(allCharacters: CharacterDto[], sort?: string, order?: string, filter?: string): CharactersDto {
-        allCharacters = this.sortAndFilterCharacters(allCharacters, sort, order, filter);
-        return this.createCharacterResponseObject(allCharacters);
-    }
-
-    sortAndFilterCharacters(allCharacters: CharacterDto[], sort?: string, order?: string, filter?: string): CharacterDto[] {
+    applyCharacterSortAndFilter(allCharacters: CharacterDto[], sort?: string, order?: string, filter?: string): CharacterDto[] {
         /**
          * This method applies any sort or filter to all the characters and returns a response with metadata
          */
         if (filter) {
-            allCharacters = allCharacters.filter(character => this.filterByGender(character, filter));
+            allCharacters = allCharacters.filter(character => this.filterMethod(character, filter));
         }
         if (sort) {
             allCharacters = this.sort(allCharacters, sort, order);
@@ -76,7 +78,7 @@ export class CharacterService {
         return movieCharacters;
     }
 
-    filterByGender(character: CharacterDto, gender: string): boolean {
+    filterMethod(character: CharacterDto, gender: string): boolean {
         return this.formatGender(character.gender) === this.formatGender(gender);
     }
 
@@ -126,10 +128,10 @@ export class CharacterService {
         return movieCharacters;
     }
 
-    retrieveCharacterFields(character: RemoteMovieObjectDto): CharacterDto {
+    retrieveCharacterFields(character: RemoteCharacterObjectDto): CharacterDto {
         /**
          * This method takes in a character object from an api and returns a character object in the format specified by the CharacterDto
-         * @param character character object defined by RemoteMovieObjectDto
+         * @param character character object defined by RemoteCharacterObjectDto
          * @returns a character object defined by CharacterDto
          */
         return {
