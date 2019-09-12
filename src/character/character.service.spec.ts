@@ -116,7 +116,6 @@ describe('CharacterService', () => {
     });
 
     it('should return a list of processed characters', async () => {
-        // jest.spyOn(characterService, 'getCharacters').mockResolvedValue(processedMovies);
         jest.spyOn(characterService, 'getCharactersFromUrls').mockResolvedValue(remoteCharacterList);
         const characterUrls: string[] =  [
             'https://swapi.co/api/people/1/',

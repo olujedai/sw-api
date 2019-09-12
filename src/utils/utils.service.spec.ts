@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UtilsService } from './utils.service';
 
-const objectArr = [
+const objectArr: Array<{date: string}> = [
   {
     date: '2037-05-25',
   },
@@ -16,7 +16,7 @@ const objectArr = [
   },
 ];
 
-const request = {
+const request: {headers: object, connection: {remoteAddress: string}, socket: {remoteAddress: string}} = {
   headers: {
       'x-forwarded-for': '192.168.0.0',
   },
