@@ -5,7 +5,7 @@ import { RequestModule } from '../request/request.module';
 import { UtilsModule } from '../utils/utils.module';
 import { CommentModule } from '../comment/comment.module';
 import { CharacterModule } from '../character/character.module';
-import { MovieExists } from './dto/movieExists.validator';
+import { MovieExists } from './movieExists.validator';
 /**
  * The controllers, providers, imports and exports of the Movies module are registered here
  */

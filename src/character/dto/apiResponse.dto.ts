@@ -1,5 +1,5 @@
 // tslint:disable:variable-name
-export class ApiResponseDto {
+export class RemoteMovieObjectDto {
     readonly name: string;
     readonly height: string;
     readonly mass: string;

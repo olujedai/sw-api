@@ -57,7 +57,7 @@ describe('CommentService', () => {
         movieId: 1,
     };
     jest.spyOn(repo, 'count').mockResolvedValueOnce([testComment].length);
-    expect(await service.count(filter)).toBe(1);
+    expect(await service.countMovieComments(filter)).toBe(1);
   });
 
   it('should create a comment and return created comment', async () => {

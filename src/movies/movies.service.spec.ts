@@ -81,7 +81,7 @@ describe('Movie service', () => {
     it('takes in raw movies and returns the procesed result.', async () => {
         jest.spyOn(movieService, 'getCommentCount').mockResolvedValue(0);
         let movieArray = rawMovies.results.map(movie => movieService.retrieveFields(movie));
-        movieArray = await movieService.processMovies(movieArray);
+        movieArray = await movieService.getMovieCommentsAndSort(movieArray);
         expect(movieArray).toEqual(processedMovies);
     });
 });

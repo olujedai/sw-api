@@ -4,7 +4,7 @@ import { CharacterDto } from './dto/character.dto';
 import { CharactersDto } from './dto/characters.dto';
 import { UtilsService } from '../utils/utils.service';
 import { FeetDto } from './dto/feet.dto';
-import { ApiResponseDto } from './dto/apiResponse.dto';
+import { RemoteMovieObjectDto } from './dto/apiResponse.dto';
 
 @Injectable()
 export class CharacterService {
@@ -34,15 +34,16 @@ export class CharacterService {
         return movieCharacters;
     }
 
-    async getCharacter(characterUrl: string): Promise<CharacterDto> {
+    async getCharacter(characterUrl: string): Promise<CharacterDto|string> {
         /**
          * This method attempts to retrieve a character from the cache or from the remote url.
          * It returns a CharacterDto from redis or an object from the remote url if the remote request is successful, otherwise it returns null
          * @param characterUrl the url of the character. This is used as the key to the cache or the url to be retrieved by a remote request
          * @returns a character object defined by CharacterDto
          */
-        let character = await this.requestService.getFromRedis(characterUrl);
-        if (character) {
+        let character: string | CharacterDto;
+        character = await this.requestService.getFromRedis(characterUrl);
+        if (typeof(character) === 'string') {
             return JSON.parse(character);
         }
         character = await this.requestService.fetchUrl(characterUrl);
@@ -51,6 +52,11 @@ export class CharacterService {
     }
 
     processCharacters(allCharacters: CharacterDto[], sort?: string, order?: string, filter?: string): CharactersDto {
+        allCharacters = this.sortAndFilterCharacters(allCharacters, sort, order, filter);
+        return this.createCharacterResponseObject(allCharacters);
+    }
+
+    sortAndFilterCharacters(allCharacters: CharacterDto[], sort?: string, order?: string, filter?: string): CharacterDto[] {
         /**
          * This method applies any sort or filter to all the characters and returns a response with metadata
          */
@@ -60,9 +66,13 @@ export class CharacterService {
         if (sort) {
             allCharacters = this.sort(allCharacters, sort, order);
         }
-        const totalNumberOfCharacters = allCharacters.length;
-        const totalHeightInCm = this.calculateHeightInCm(allCharacters);
-        const movieCharacters = this.prepareResponse(allCharacters, totalNumberOfCharacters, totalHeightInCm);
+        return allCharacters;
+    }
+
+    createCharacterResponseObject(allCharacters: CharacterDto[]): CharactersDto {
+        const totalNumberOfCharacters: number = allCharacters.length;
+        const totalHeightInCm: number = this.calculateHeightInCm(allCharacters);
+        const movieCharacters: CharactersDto = this.getResponseFormat(allCharacters, totalNumberOfCharacters, totalHeightInCm);
         return movieCharacters;
     }
 
@@ -79,18 +89,18 @@ export class CharacterService {
     }
 
     calculateHeightInCm(characterList: CharacterDto[]): number {
-        const numOr0 = n => isNaN(n) ? 0 : Number(n);
-        let totalHeightInCm = 0;
-        characterList.forEach(character =>
+        const numOr0 = (n: number) => isNaN(n) ? 0 : Number(n);
+        let totalHeightInCm: number = 0;
+        characterList.forEach((character: CharacterDto) =>
             totalHeightInCm += numOr0(character.height),
         );
         return totalHeightInCm;
     }
 
     convertCmToFeet(heightInCm: number): FeetDto {
-        const realFeet = ((heightInCm * 0.393700) / 12);
-        const feet = Math.floor(realFeet);
-        const inches = Math.round((realFeet - feet) * 12);
+        const realFeet: number = ((heightInCm * 0.393700) / 12);
+        const feet: number = Math.floor(realFeet);
+        const inches: number = Math.round((realFeet - feet) * 12);
         return {feet, inches};
     }
 
@@ -99,7 +109,7 @@ export class CharacterService {
         return `${feet}ft. ${inches}in.`;
     }
 
-    prepareResponse(allCharacters: CharacterDto[], totalNumberOfCharacters: number, totalHeightInCm: number): CharactersDto {
+    getResponseFormat(allCharacters: CharacterDto[], totalNumberOfCharacters: number, totalHeightInCm: number): CharactersDto {
         /*
         This method takes in an array of character objects (CharacterDto) and returns an object with characters and metadata
         */
@@ -116,10 +126,10 @@ export class CharacterService {
         return movieCharacters;
     }
 
-    retrieveCharacterFields(character: ApiResponseDto): CharacterDto {
+    retrieveCharacterFields(character: RemoteMovieObjectDto): CharacterDto {
         /**
          * This method takes in a character object from an api and returns a character object in the format specified by the CharacterDto
-         * @param character character object defined by ApiResponseDto
+         * @param character character object defined by RemoteMovieObjectDto
          * @returns a character object defined by CharacterDto
          */
         return {

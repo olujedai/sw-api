@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Request } from 'express';
 
 @Injectable()
 export class UtilsService {
@@ -15,13 +16,15 @@ export class UtilsService {
             return 0;
         }
 
-        let valA = a[key];
-        let valB = b[key];
-        if (this.isAString(valA)) {
+        let valA: string | number ;
+        let valB: string | number ;
+        valA = a[key];
+        valB = b[key];
+        if (typeof(valA) === 'string') {
             valA = valA.toUpperCase();
         }
 
-        if (this.isAString(valB)) {
+        if (typeof(valB) === 'string') {
             valB = valB.toUpperCase();
         }
 
@@ -42,15 +45,19 @@ export class UtilsService {
         return (order.toLowerCase() === 'desc') ? (comparison * -1) : comparison;
     }
 
-    isAString = (a) => {
-        return typeof a === 'string';
-    }
+    // isAString = (a: any): boolean => {
+    //     return typeof a === 'string';
+    // }
 
-    isANumber = (a) => {
+    isANumber = (a: number | string): boolean => {
         return !Number.isNaN(Number(a));
     }
 
-    getIpAddress = (request) => {
-        return (request.headers['x-forwarded-for'] || '').split(',').pop() || request.connection.remoteAddress;
+    getIpAddress = (request: Request): string => {
+        const ipAddress: string | string[] = (request.headers['x-forwarded-for']);
+        if (typeof(ipAddress) === 'string') {
+            return ipAddress.split(',').pop() || request.connection.remoteAddress || request.socket.remoteAddress || '';
+        }
+        return request.connection.remoteAddress || request.socket.remoteAddress || '';
     }
 }

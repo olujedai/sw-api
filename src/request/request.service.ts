@@ -2,7 +2,9 @@ import { Injectable } from '@nestjs/common';
 import * as rp from 'request-promise-native';
 import { promisify } from 'util';
 import * as redis from 'redis';
-
+import { RemoteMoviesObjectDto } from '../movies/dto/remoteMovies.dto';
+import { RemoteMovieObjectDto } from '../movies/dto/remoteMovie.dto';
+import { Errback } from 'express';
 /*
 Provides methods that implement logic for interacting with the cache and remote APIs
 */
@@ -26,10 +28,10 @@ export class RequestService {
             json: true,
         };
         return rp(options).then(
-            (resp) => {
+            (resp: RemoteMoviesObjectDto|RemoteMovieObjectDto): RemoteMoviesObjectDto|RemoteMovieObjectDto => {
             return resp;
         })
-        .catch((err) => {
+        .catch((err: {statusCode: number}): null => {
             if (err.statusCode === 400) {
                 return null;
             }

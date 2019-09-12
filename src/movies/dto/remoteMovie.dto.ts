@@ -1,9 +1,9 @@
 // tslint:disable:variable-name
 
 /**
- * Data Transfer Object for specifying the expected api response
+ * Data Transfer Object for specifying the one movie object
  */
-export class ApiResponseDto {
+export class RemoteMovieObjectDto {
     readonly title: string;
     readonly episode_id: number;
     readonly opening_crawl: string;

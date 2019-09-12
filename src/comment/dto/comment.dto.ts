@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 
 /**
  * Comment Data Transfer Object for creating a new movie comment along with the swagger api definition and
@@ -16,6 +16,7 @@ export class CommentDto {
         },
     )
     @IsNotEmpty()
+    @Length(0, 500)
     readonly comment: string;
 
     @ApiModelProperty(

@@ -14,7 +14,7 @@ export class CommentService {
         private readonly commentRepository: Repository<Comment>,
     ) {}
 
-    async findAll(skip, size, filter): Promise<[Comment[], number]> {
+    async findAll(skip: number, size: number, filter: { movieId: number; }): Promise<[Comment[], number]> {
         /**
          * Retrieves all the results that match the query along with a count of the number of results match that query.
          * @param skip the number of queries to skip. Used for paginating the database response
@@ -27,12 +27,12 @@ export class CommentService {
             order: {
                 dateCreated: 'DESC',
             },
-            skip: Number(skip),
-            take: Number(size || 20),
+            skip,
+            take: size || 20,
         });
     }
 
-    count(filter): Promise<number> {
+    countMovieComments(filter: { movieId: number; }): Promise<number> {
         /**
          * Counts the results that match a filter.
          * @param filter the filter that should be applied to the database query
@@ -43,7 +43,7 @@ export class CommentService {
         });
     }
 
-    createComment(movieId, ipAddress, comment, commenter): Promise<Comment> {
+    createComment(movieId: number, ipAddress: string, comment: string, commenter: string): Promise<Comment> {
         /**
          * Creates a comment in the database table and returns the comments
          * @param movieId the ID of the movie which the comment is for.

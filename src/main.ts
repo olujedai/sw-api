@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AllExceptionsFilter } from './all-exception.filter';
+import { ValidationPipe404 } from './validatation.pipe';
 import * as helmet from 'helmet';
 import { LoggerService } from './logger/logger.service';
 import { useContainer } from 'class-validator';
@@ -18,7 +18,7 @@ async function bootstrap() {
   app.use(logger.logError());
   app.useGlobalFilters(new AllExceptionsFilter());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe404());
   const options = new DocumentBuilder()
     .setTitle('Star Wars Api')
     .setDescription('App for communicating with the Star Wars API')

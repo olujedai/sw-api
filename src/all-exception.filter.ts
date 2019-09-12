@@ -7,14 +7,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
 
-    const status =
-      exception instanceof HttpException
+    const status: number = exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    const responseMessage: string = status === HttpStatus.BAD_REQUEST ? exception.response.message :
+    const responseMessage: string = status !== HttpStatus.INTERNAL_SERVER_ERROR ? exception.response.message :
     'An error occured. We are working on it. Please try back later.';
     response.status(status).json({
-      statusCode: 400,
+      statusCode: status,
       message: responseMessage,
       timestamp: new Date().toISOString(),
       path: request.url,
