@@ -45,10 +45,6 @@ export class UtilsService {
         return (order.toLowerCase() === 'desc') ? (comparison * -1) : comparison;
     }
 
-    // isAString = (a: any): boolean => {
-    //     return typeof a === 'string';
-    // }
-
     isANumber = (a: number | string): boolean => {
         return !Number.isNaN(Number(a));
     }
