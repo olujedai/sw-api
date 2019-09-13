@@ -1,8 +1,9 @@
 import { Request } from 'express';
 import { Controller, Get, Query, Param, Req, Body, Post, Header } from '@nestjs/common';
-import { ApiUseTags } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse, ApiImplicitBody, ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
 import { CommentService } from '../comment/comment.service';
 import { CommentDto } from '../comment/dto/comment.dto';
+import { CommentResponseDto } from '../comment/dto/commentResponse.dto';
 import { Comment } from '../comment/comment.entity';
 import { CharacterService } from '../character/character.service';
 import { CharactersDto } from '../character/dto/characters.dto';
@@ -25,20 +26,22 @@ export class MoviesController {
     ) {}
 
     @Get()
+    @ApiResponse({ status: 200, type: [MovieDto]})
     async getMovies(): Promise<MovieDto[]> {
       return await this.movieService.getMovies();
     }
 
     @Get(':movieId/comments')
-    async findAllMovieComments(@Param() param: MovieParamDto, @Query() query) {
-        const movieId = param.movieId;
+    @ApiResponse({ status: 200, type: CommentResponseDto})
+    async findAllMovieComments(@Param() param: MovieParamDto, @Query() query: {skip: number, size: number}): Promise<CommentResponseDto> {
+        const movieId: number = param.movieId;
         const { skip, size } = query;
-        const filter = {
+        const filter: MovieParamDto = {
             movieId,
         };
-        const response = await this.commentService.findAll(skip, size, filter);
-        const comments = response[0];
-        const count = response[1];
+        const response: [Comment[], number] = await this.commentService.findAll(skip, size, filter);
+        const comments: Comment[] = response[0];
+        const count: number = response[1];
         return {
             comments,
             count,
@@ -47,19 +50,21 @@ export class MoviesController {
 
     @Post(':movieId/comments')
     @Header('Content-Type', 'application/json')
+    @ApiResponse({ status: 200, type: Comment})
     async saveComment(@Param() param: MovieParamDto, @Req() request: Request, @Body() body: CommentDto): Promise<Comment> {
-        const movieId = param.movieId;
-        const ipAddress = this.utilsService.getIpAddress(request);
+        const movieId: number = param.movieId;
+        const ipAddress: string = this.utilsService.getIpAddress(request);
         const {comment, commenter} = body;
         return await this.commentService.createComment(movieId, ipAddress, comment, commenter);
     }
 
     @Get(':movieId/characters')
-    async getCharacters(@Param() params: MovieParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
+    @ApiResponse({ status: 200, type: CharactersDto})
+    async getCharacters(@Param() param: MovieParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
         const {sort, order, filter} = query;
-        const movieId: number = params.movieId;
+        const movieId: number = param.movieId;
         const movie: MovieDto = await this.movieService.getMovie(movieId);
-        const characters = movie.characters;
+        const characters: string[] = movie.characters;
         return await this.characterService.getCharacters(characters, sort, order, filter);
     }
 }

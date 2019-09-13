@@ -124,7 +124,8 @@ describe('CharacterService', () => {
             'https://swapi.co/api/people/4/',
         ];
         const response: CharactersDto = await characterService.getCharacters(characterUrls);
-        expect(response).toEqual(processedCharacters);
+        expect(response.metadata).toEqual(processedCharacters.metadata);
+        expect(response.characters).toEqual(expect.arrayContaining(processedCharacters.characters));
     });
 
     it('should return one character', async () => {

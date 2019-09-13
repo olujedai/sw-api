@@ -1,11 +1,49 @@
+import { ApiModelProperty } from '@nestjs/swagger';
+
 /**
  * Data Transfer Object that specifies the movie fields used in this application
  */
 export class MovieDto {
-    readonly id: number;  // The ID of the movie
-    readonly name: string;  // The name of the movie
-    readonly releaseDate: string;  // The date the movie was released
-    readonly openingCrawl: string;  // The opening crawl of the movie
-    readonly characters: string[];  // An array of the characters in the movie
-    commentCount: number;  // The number of comments this movie has
+    @ApiModelProperty(
+        {
+            description: 'The ID of the movie',
+            type: 'number',
+        },
+    )
+    readonly id: number;
+    @ApiModelProperty(
+        {
+            description: 'The name of the movie',
+            type: 'string',
+        },
+    )
+    readonly name: string;
+    @ApiModelProperty(
+        {
+            description: 'The date the movie was released',
+            type: 'string',
+        },
+    )
+    readonly releaseDate: string;
+    @ApiModelProperty(
+        {
+            description: 'The opening crawl of the movie',
+            type: 'string',
+        },
+    )
+    readonly openingCrawl: string;
+    @ApiModelProperty(
+        {
+            description: 'An array of the character urls',
+            type: 'string',
+        },
+    )
+    readonly characters: string[];
+    @ApiModelProperty(
+        {
+            description: 'The number of comments the movie has',
+            type: 'number',
+        },
+    )
+    commentCount: number;
 }

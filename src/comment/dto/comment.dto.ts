@@ -16,7 +16,7 @@ export class CommentDto {
         },
     )
     @IsNotEmpty()
-    @Length(0, 500)
+    @Length(1, 500)
     readonly comment: string;
 
     @ApiModelProperty(
@@ -27,5 +27,6 @@ export class CommentDto {
         },
     )
     @IsNotEmpty()
+    @Length(1, 20)
     readonly commenter: string;
 }

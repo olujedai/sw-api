@@ -3,7 +3,7 @@
 /**
  * Data Transfer Object for specifying the one movie object
  */
-export class RemoteMovieObjectDto {
+export interface RemoteMovieObjectDto {
     readonly title: string;
     readonly episode_id: number;
     readonly opening_crawl: string;
