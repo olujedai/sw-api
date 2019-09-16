@@ -1,6 +1,4 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { Validate } from 'class-validator';
-import { MovieValidator } from './movies.validator';
 
 export class MovieParamDto {
     @ApiModelProperty(
@@ -10,6 +8,5 @@ export class MovieParamDto {
             type: 'number',
         },
     )
-    // @Validate(MovieValidator)
     movieId: number;
 }
