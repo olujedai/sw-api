@@ -7,7 +7,7 @@ import { MovieDto } from './dto/movies.dto';
  * Custom validator that checks if a movieId exists
  */
 @Injectable()
-@ValidatorConstraint({ name: 'customText', async: true })
+@ValidatorConstraint({ name: 'movieId', async: true })
 export class MovieExists implements ValidatorConstraintInterface {
     constructor(private readonly movieService: MoviesService) {}
 
