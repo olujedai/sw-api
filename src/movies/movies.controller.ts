@@ -1,6 +1,6 @@
 import { Request } from 'express';
 import { Controller, Get, Query, Param, Req, Body, Post, Header } from '@nestjs/common';
-import { ApiUseTags, ApiResponse, ApiImplicitBody, ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
+import { ApiUseTags, ApiResponse } from '@nestjs/swagger';
 import { CommentService } from '../comment/comment.service';
 import { CommentBodyDto } from '../comment/dto/comment.dto';
 import { CommentResponseDto } from '../comment/dto/commentResponse.dto';
