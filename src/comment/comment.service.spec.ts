@@ -8,7 +8,6 @@ const testComment: Comment =  {
     movieId: 1,
     ipAddress: '154.113.66.78',
     comment: 'Good movie',
-    commenter: 'Anon',
     id: 2,
     dateCreated: new Date('2019-08-27T19:56:22.485Z'),
 };
@@ -64,8 +63,7 @@ describe('CommentService', () => {
     const movieId = testComment.movieId;
     const ipAddress = testComment.ipAddress;
     const comment = testComment.comment;
-    const commenter = testComment.commenter;
     jest.spyOn(service, 'createComment').mockResolvedValueOnce(testComment);
-    expect(await service.createComment(movieId, ipAddress, comment, commenter)).toBe(testComment);
+    expect(await service.createComment(movieId, ipAddress, comment)).toBe(testComment);
   });
 });

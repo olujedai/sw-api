@@ -43,7 +43,7 @@ export class CommentService {
         });
     }
 
-    createComment(movieId: number, ipAddress: string, comment: string, commenter: string): Promise<Comment> {
+    createComment(movieId: number, ipAddress: string, comment: string): Promise<Comment> {
         /**
          * Creates a comment in the database table and returns the comments
          * @param movieId the ID of the movie which the comment is for.
@@ -56,7 +56,6 @@ export class CommentService {
         newComment.movieId = movieId;
         newComment.ipAddress = ipAddress;
         newComment.comment = comment;
-        newComment.commenter = commenter;
         return this.commentRepository.save(newComment);
     }
 }

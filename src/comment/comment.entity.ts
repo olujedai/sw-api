@@ -33,14 +33,14 @@ export class Comment {
   )
   comment: string;
 
-  @Column({ length: 20 })
-  @ApiModelProperty(
-    {
-        description: 'The name of the comment writer',
-        type: 'string',
-    },
-  )
-  commenter: string;
+  // @Column({ length: 20 })
+  // @ApiModelProperty(
+  //   {
+  //       description: 'The name of the comment writer',
+  //       type: 'string',
+  //   },
+  // )
+  // commenter: string;
 
   @Column()
   @ApiModelProperty(

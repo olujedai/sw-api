@@ -18,15 +18,4 @@ export class CommentDto {
     @IsNotEmpty()
     @Length(1, 500)
     readonly comment: string;
-
-    @ApiModelProperty(
-        {
-            description: 'The name of the user commenting',
-            required: true,
-            type: 'string',
-        },
-    )
-    @IsNotEmpty()
-    @Length(1, 20)
-    readonly commenter: string;
 }

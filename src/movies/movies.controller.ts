@@ -54,8 +54,8 @@ export class MoviesController {
     async saveComment(@Param() param: MovieParamDto, @Req() request: Request, @Body() body: CommentDto): Promise<Comment> {
         const movieId: number = param.movieId;
         const ipAddress: string = this.utilsService.getIpAddress(request);
-        const {comment, commenter} = body;
-        return await this.commentService.createComment(movieId, ipAddress, comment, commenter);
+        const {comment} = body;
+        return await this.commentService.createComment(movieId, ipAddress, comment);
     }
 
     @Get(':movieId/characters')

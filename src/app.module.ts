@@ -8,19 +8,11 @@ import { UtilsModule } from './utils/utils.module';
 import { CommentModule } from './comment/comment.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggerModule } from './logger/logger.module';
+import { config } from './ormconfig';
 
 @Module({
   imports: [MoviesModule, RequestModule, CharacterModule, UtilsModule, CommentModule,
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: String(process.env.DATABASE_HOST),
-      port: Number(process.env.DATABASE_PORT),
-      username: String(process.env.DATABASE_USER),
-      password: String(process.env.DATABASE_PASSWORD),
-      database: String(process.env.DATABASE_NAME),
-      entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
-    }),
+    TypeOrmModule.forRoot(config),
     LoggerModule,
   ],
   controllers: [AppController],
