@@ -12,6 +12,8 @@ import { CharacterQueryDto } from '../character/dto/character.query.dto';
 import { MoviesService } from './movies.service';
 import { MovieDto } from './dto/movies.dto';
 import { UtilsService } from '../utils/utils.service';
+import { MovieValidator } from './movies.validator';
+
 /*
 Provides methods for accepting requests and responding to them
 */
@@ -23,6 +25,7 @@ export class MoviesController {
       private readonly commentService: CommentService,
       private readonly characterService: CharacterService,
       private readonly utilsService: UtilsService,
+      private readonly movieValidator: MovieValidator,
     ) {}
 
     @Get()
@@ -35,6 +38,7 @@ export class MoviesController {
     @ApiResponse({ status: 200, type: CommentResponseDto})
     async findAllMovieComments(@Param() param: MovieParamDto, @Query() query: {skip: number, size: number}): Promise<CommentResponseDto> {
         const movieId: number = param.movieId;
+        await this.movieValidator.validateMovieId(movieId);
         const { skip, size } = query;
         const filter: MovieParamDto = {
             movieId,
@@ -53,6 +57,7 @@ export class MoviesController {
     @ApiResponse({ status: 200, type: Comment})
     async saveComment(@Param() param: MovieParamDto, @Req() request: Request, @Body() body: CommentBodyDto): Promise<Comment> {
         const movieId: number = param.movieId;
+        await this.movieValidator.validateMovieId(movieId);
         const ipAddress: string = this.utilsService.getIpAddress(request);
         const {comment} = body;
         return await this.commentService.createComment(movieId, ipAddress, comment);
@@ -63,7 +68,7 @@ export class MoviesController {
     async getCharacters(@Param() param: MovieParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
         const {sort, order, filter} = query;
         const movieId: number = param.movieId;
-        const movie: MovieDto = await this.movieService.getMovie(movieId);
+        const movie: MovieDto = await this.movieValidator.validateMovieId(movieId);
         const characters: string[] = movie.characters;
         return await this.characterService.getCharacters(characters, sort, order, filter);
     }

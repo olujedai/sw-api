@@ -10,17 +10,17 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const status: number = exception instanceof HttpException
         ? exception.getStatus()
         : HttpStatus.INTERNAL_SERVER_ERROR;
-    let responseMessage: string[];
+    let responseMessage: string | string[];
     if (status === HttpStatus.INTERNAL_SERVER_ERROR) {
-      responseMessage = ['An error occured. We are working on it. Please try back later.'];
-    } else if (status === HttpStatus.BAD_REQUEST || status === HttpStatus.NOT_FOUND) {
+      responseMessage = 'An error occured. We are working on it. Please try back later.';
+    } else if (status === HttpStatus.BAD_REQUEST) {
       responseMessage = Object.values(exception.response.message[0].constraints);
     } else {
       responseMessage = exception.response.message;
     }
     response.status(status).json({
       statusCode: status,
-      message: responseMessage[0],
+      message: Array.isArray(responseMessage) === true ? responseMessage[0] : responseMessage,
       timestamp: new Date().toISOString(),
       path: request.url,
     });
