@@ -1,6 +1,5 @@
 import { ConnectionOptions } from 'typeorm';
 
-console.log(String(process.env.DATABASE_HOST));
 export const config: ConnectionOptions = {
     type: 'postgres',
     host: String(process.env.DATABASE_HOST),

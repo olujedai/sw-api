@@ -2,7 +2,7 @@ import { Request } from 'express';
 import { Controller, Get, Query, Param, Req, Body, Post, Header } from '@nestjs/common';
 import { ApiUseTags, ApiResponse, ApiImplicitBody, ApiImplicitParam, ApiImplicitQuery } from '@nestjs/swagger';
 import { CommentService } from '../comment/comment.service';
-import { CommentDto } from '../comment/dto/comment.dto';
+import { CommentBodyDto } from '../comment/dto/comment.dto';
 import { CommentResponseDto } from '../comment/dto/commentResponse.dto';
 import { Comment } from '../comment/comment.entity';
 import { CharacterService } from '../character/character.service';
@@ -51,7 +51,7 @@ export class MoviesController {
     @Post(':movieId/comments')
     @Header('Content-Type', 'application/json')
     @ApiResponse({ status: 200, type: Comment})
-    async saveComment(@Param() param: MovieParamDto, @Req() request: Request, @Body() body: CommentDto): Promise<Comment> {
+    async saveComment(@Param() param: MovieParamDto, @Req() request: Request, @Body() body: CommentBodyDto): Promise<Comment> {
         const movieId: number = param.movieId;
         const ipAddress: string = this.utilsService.getIpAddress(request);
         const {comment} = body;

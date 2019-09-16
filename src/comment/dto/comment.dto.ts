@@ -6,7 +6,7 @@ import { IsNotEmpty, Length } from 'class-validator';
  * field validations are defined here.
  */
 
-export class CommentDto {
+export class CommentBodyDto {
     @ApiModelProperty(
         {
             description: 'A movie viewer\'s comment',

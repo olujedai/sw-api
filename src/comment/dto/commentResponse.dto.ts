@@ -1,5 +1,5 @@
 import { ApiModelProperty } from '@nestjs/swagger';
-import { CommentDto } from './comment.dto';
+import { CommentBodyDto } from './comment.dto';
 /**
  * Comment Data Transfer Object for creating a new movie comment along with the swagger api definition and
  * field validations are defined here.
@@ -17,8 +17,8 @@ export class CommentResponseDto {
     @ApiModelProperty(
         {
             description: 'An array of movie comments',
-            type: [CommentDto],
+            type: [CommentBodyDto],
         },
     )
-    readonly comments: CommentDto[];
+    readonly comments: CommentBodyDto[];
 }
