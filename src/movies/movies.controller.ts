@@ -68,7 +68,8 @@ export class MoviesController {
     async getCharacters(@Param() param: MovieParamDto, @Query() query: CharacterQueryDto): Promise<CharactersDto> {
         const {sort, order, filter} = query;
         const movieId: number = param.movieId;
-        const movie: MovieDto = await this.movieValidator.validateMovieId(movieId);
+        await this.movieValidator.validateMovieId(movieId);
+        const movie: MovieDto = await this.movieService.getMovie(movieId);
         const characters: string[] = movie.characters;
         return await this.characterService.getCharacters(characters, sort, order, filter);
     }
