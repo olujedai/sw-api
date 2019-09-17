@@ -13,7 +13,7 @@ import { MovieDto } from './dto/movies.dto';
 const processedMovieJson: Buffer = fs.readFileSync(`${__dirname}/static/processedMovie.json`);
 const processedMovie: MovieDto = JSON.parse(processedMovieJson.toString());
 
-describe('Movie service', () => {
+describe('Movie validation tests', () => {
     let movieService: MoviesService;
     let movieValidator: MovieValidator;
 
