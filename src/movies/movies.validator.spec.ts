@@ -9,18 +9,13 @@ import { CommentService } from '../comment/comment.service';
 import { Comment } from '../comment/comment.entity';
 import * as fs from 'fs';
 import { MovieDto } from './dto/movies.dto';
-import { RemoteMovieObjectDto } from './dto/remoteMovie.dto';
-import { RemoteMoviesObjectDto } from './dto/remoteMovies.dto';
 
 const processedMovieJson: Buffer = fs.readFileSync(`${__dirname}/static/processedMovie.json`);
 const processedMovie: MovieDto = JSON.parse(processedMovieJson.toString());
 
 describe('Movie service', () => {
-    // let requestService: RequestService;
-    // let commentService: CommentService;
     let movieService: MoviesService;
     let movieValidator: MovieValidator;
-    // let utilsService: UtilsService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
@@ -35,22 +30,15 @@ describe('Movie service', () => {
             UtilsService,
             MovieValidator,
         ],
-        // imports: [MovieValidator],
         }).compile();
 
-        // requestService = module.get<RequestService>(RequestService);
-        // commentService = module.get<CommentService>(CommentService);
         movieService = module.get<MoviesService>(MoviesService);
         movieValidator = module.get<MovieValidator>(MovieValidator);
-        // utilsService = module.get<UtilsService>(UtilsService);
     });
 
     it('should be defined', () => {
-        // expect(requestService).toBeDefined();
-        // expect(commentService).toBeDefined();
         expect(movieService).toBeDefined();
         expect(movieValidator).toBeDefined();
-        // expect(utilsService).toBeDefined();
     });
 
     it('should raise a Not found exception when a movie is not found', async () => {
@@ -63,9 +51,4 @@ describe('Movie service', () => {
         jest.spyOn(movieService, 'getMovie').mockResolvedValue(processedMovie);
         expect(await movieValidator.validateMovieId(1)).toBe(processedMovie);
     });
-
-    // it('should return a list of raw movies', async () => {
-    //     jest.spyOn(movieService, 'getMoviesFromRemote').mockResolvedValue(rawMovies.results);
-    //     expect(await movieService.getMoviesFromRemote('films')).toBe(rawMovies.results);
-    // });
 });
