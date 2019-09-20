@@ -16,25 +16,29 @@ const processedMovie: MovieDto = JSON.parse(processedMovieJson.toString());
 describe('Movie validation tests', () => {
     let movieService: MoviesService;
     let movieValidator: MovieValidator;
+    let requestService: RequestService;
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-        providers: [
-            RequestService,
-            CommentService,
-            {
-                provide: getRepositoryToken(Comment),
-                useValue: {name: ''},
-            },
-            MoviesService,
-            UtilsService,
-            MovieValidator,
-        ],
+            providers: [
+                RequestService,
+                CommentService,
+                {
+                    provide: getRepositoryToken(Comment),
+                    useValue: {name: ''},
+                },
+                MoviesService,
+                UtilsService,
+                MovieValidator,
+            ],
         }).compile();
 
         movieService = module.get<MoviesService>(MoviesService);
+        requestService = module.get<RequestService>(RequestService);
         movieValidator = module.get<MovieValidator>(MovieValidator);
     });
+
+    afterAll(() => requestService.closeRedisInstance());
 
     it('should be defined', () => {
         expect(movieService).toBeDefined();
@@ -44,7 +48,6 @@ describe('Movie validation tests', () => {
     it('should raise a Not found exception when a movie is not found', async () => {
         jest.spyOn(movieService, 'getMovie').mockResolvedValue(null);
         await expect(movieValidator.validateMovieId(1)).rejects.toThrow(NotFoundException);
-        expect(1).toBe(1);
     });
 
     it('should return a movie', async () => {

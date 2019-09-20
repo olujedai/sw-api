@@ -4,7 +4,6 @@ import { promisify } from 'util';
 import * as redis from 'redis';
 import { RemoteMoviesObjectDto } from '../movies/dto/remoteMovies.dto';
 import { RemoteMovieObjectDto } from '../movies/dto/remoteMovie.dto';
-import { Errback } from 'express';
 /*
 Provides methods that implement logic for interacting with the cache and remote APIs
 */
@@ -18,6 +17,10 @@ export const client = redis.createClient({
 export class RequestService {
     storeInRedis = promisify(client.set).bind(client);
     getFromRedis = promisify(client.get).bind(client);
+
+    closeRedisInstance = () => {
+        client.quit();
+    }
 
     async fetch(path: string) {
         const endpoint = process.env.SWAPI_URL || 'https://swapi.co/api';

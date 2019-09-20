@@ -9,7 +9,7 @@ const testComment: Comment =  {
     ipAddress: '154.113.66.78',
     comment: 'Good movie',
     id: 2,
-    dateCreated: new Date('2019-08-27T19:56:22.485Z'),
+    dateCreated: new Date('2019-08-27'),
 };
 const findAndCountResponse: [Comment[], number] = [
     [testComment],
@@ -39,6 +39,7 @@ describe('CommentService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+    expect(repo).toBeDefined();
   });
 
   it('should return for findAll', async () => {

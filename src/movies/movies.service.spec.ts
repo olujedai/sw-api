@@ -45,6 +45,8 @@ describe('Movie service', () => {
         utilsService = module.get<UtilsService>(UtilsService);
     });
 
+    afterAll(() => requestService.closeRedisInstance());
+
     it('should be defined', () => {
         expect(requestService).toBeDefined();
         expect(commentService).toBeDefined();

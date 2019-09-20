@@ -42,6 +42,8 @@ describe('CharacterService', () => {
         utilsService = module.get<UtilsService>(UtilsService);
     });
 
+    afterAll(() => requestService.closeRedisInstance());
+
     it('should be defined', () => {
         expect(characterService).toBeDefined();
         expect(requestService).toBeDefined();

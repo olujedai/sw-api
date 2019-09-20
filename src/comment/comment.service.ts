@@ -27,8 +27,8 @@ export class CommentService {
             order: {
                 dateCreated: 'DESC',
             },
-            skip,
-            take: size || 20,
+            // skip,
+            // take: size || 20,
         });
     }
 
