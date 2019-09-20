@@ -11,7 +11,7 @@ export class HeightMeta {
             type: 'number',
         },
     )
-    readonly cm: number;
+    readonly cm: string;
     @ApiModelProperty(
         {
             description: 'Height in feet',

@@ -106,26 +106,25 @@ export class CharacterService {
         return {feet, inches};
     }
 
-    formatFeet(heightInFeet: FeetDto): string {
+    formatFeet(heightInFeet: FeetDto): {feet: number, inches: number} {
         const {feet, inches} = heightInFeet;
-        return `${feet}ft. ${inches}in.`;
+        return {feet, inches};
     }
 
     getResponseFormat(allCharacters: CharacterDto[], totalNumberOfCharacters: number, totalHeightInCm: number): CharactersDto {
         /*
         This method takes in an array of character objects (CharacterDto) and returns an object with characters and metadata
         */
-        let movieCharacters;
-        movieCharacters = {};
-        movieCharacters.metadata = {
-            total: totalNumberOfCharacters,
-            totalHeight: {
-                cm: `${totalHeightInCm}cm`,
-                feet: this.formatFeet(this.convertCmToFeet(totalHeightInCm)),
+        return {
+            metadata: {
+                total: totalNumberOfCharacters,
+                totalHeight: {
+                    cm: `${totalHeightInCm}cm`,
+                    feet: this.formatFeet(this.convertCmToFeet(totalHeightInCm)),
+                },
             },
+            characters: allCharacters,
         };
-        movieCharacters.characters = allCharacters;
-        return movieCharacters;
     }
 
     retrieveCharacterFields(character: RemoteCharacterObjectDto): CharacterDto {
