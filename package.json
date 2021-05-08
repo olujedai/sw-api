@@ -50,7 +50,7 @@
     "rxjs": "^6.3.3",
     "sqlite3": "^4.1.0",
     "swagger-ui-express": "^4.0.7",
-    "typeorm": "^0.2.18",
+    "typeorm": "^0.2.25",
     "util": "^0.12.1",
     "winston": "^3.2.1"
   },
